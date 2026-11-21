@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Only in the "full" edition: Reels and Shorts blocking through Android's Accessibility API. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Leaves YouTube Shorts, Instagram Reels and Snapchat Spotlight when the user turned that on.
+             Receives events only from those apps (see res/xml/reels_service.xml). On-device only. -->
+        <service
+            android:name=".ReelsService"
+            android:exported="true"
+            android:label="@string/reels_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/reels_service" />
+        </service>
+    </application>
+</manifest>

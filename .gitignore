@@ -1,0 +1,25 @@
+# Build output and IDE
+.gradle/
+build/
+.idea/
+*.iml
+.kotlin/
+local.properties
+*.aab
+*.apk
+*.jks
+*.keystore
+gradle-*-bin.zip
+
+# Personal notes (not for the public repo)
+HANDOFF.md
+INSTALL.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.db
+v2/agent/config.json

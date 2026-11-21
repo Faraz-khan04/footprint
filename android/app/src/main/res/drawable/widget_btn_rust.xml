@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- the hard offset shade that the app's buttons use -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:left="3dp" android:top="3dp">
+        <shape android:shape="rectangle"><solid android:color="#00000000" /><corners android:radius="3dp" /></shape>
+    </item>
+    <item android:right="3dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#C7503A" /><corners android:radius="3dp" />
+        </shape>
+    </item>
+</layer-list>

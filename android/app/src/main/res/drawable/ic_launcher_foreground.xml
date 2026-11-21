@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- an original footprint mark: sole, heel and four toes -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#C7503A"
+        android:pathData="M54,40 C63,40 66,52 64,61 C62,69 58,72 54,72 C50,72 46,69 44,61 C42,52 45,40 54,40Z" />
+    <path android:fillColor="#C7503A"
+        android:pathData="M54,75 C59,75 62,79 61,83 C60,87 57,88 54,88 C51,88 48,87 47,83 C46,79 49,75 54,75Z" />
+    <path android:fillColor="#EFEBE2"
+        android:pathData="M45,33 m-3.5,0 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0" />
+    <path android:fillColor="#EFEBE2"
+        android:pathData="M51,29 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#EFEBE2"
+        android:pathData="M57,29 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" />
+    <path android:fillColor="#EFEBE2"
+        android:pathData="M63,33 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
+</vector>

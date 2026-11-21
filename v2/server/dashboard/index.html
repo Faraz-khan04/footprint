@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151515">
+<title>Footprint — Faraz Khan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Courier+Prime:wght@400;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8E2D4;--fg:#151515;--mute:#6d685f;--line:rgba(21,21,21,.16);--grid:rgba(21,21,21,.05);
+  --paper:#151515;--paperInk:#EDE7DA;--rust:#C7503A;--blue:#3F6FE0;--cell:rgba(21,21,21,.04);
+  --noise:.10;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#151515;--fg:#EFEBE2;--mute:#8d897f;--line:rgba(239,235,226,.14);--grid:rgba(239,235,226,.035);
+  --paper:#EDE7DA;--paperInk:#151515;--cell:rgba(239,235,226,.025);--noise:.07}
+}
+:root[data-theme="dark"]{--bg:#151515;--fg:#EFEBE2;--mute:#8d897f;--line:rgba(239,235,226,.14);--grid:rgba(239,235,226,.035);
+  --paper:#EDE7DA;--paperInk:#151515;--cell:rgba(239,235,226,.025);--noise:.07}
+
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;color:var(--fg);font-family:'Courier Prime','Courier New',monospace;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:var(--noise);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+.app{max-width:440px;margin:0 auto;padding:0 18px 130px;position:relative;overflow-x:clip}
+
+/* type */
+.heavy{font-family:Montserrat,'Arial Black',sans-serif;font-weight:900;letter-spacing:-.06em;line-height:.85}
+.hand{font-family:Caveat,'Comic Sans MS',cursive;font-weight:700;letter-spacing:-.01em}
+.mono{font-family:'Courier Prime','Courier New',monospace;font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:11px}
+.outline{color:transparent;-webkit-text-stroke:1.5px var(--fg)}
+
+/* paper tag */
+.tag{display:inline-block;background:var(--paper);color:var(--paperInk);padding:5px 10px;box-shadow:3px 3px 0 var(--blue);transform:rotate(-2deg)}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:flex-start;padding-top:16px;position:relative;z-index:3}
+.logo{font-family:Montserrat,sans-serif;font-weight:900;font-size:22px;line-height:.9;letter-spacing:-.06em}
+.theme{background:none;border:1px solid var(--line);padding:8px 10px;cursor:pointer;min-height:36px}
+[hidden]{display:none!important}
+.ticker{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:18px -18px 0;padding:12px 0;white-space:nowrap}
+.track{display:inline-flex;gap:26px;padding-left:26px;animation:ticker 40s linear infinite;font-family:Montserrat,'Arial Black',sans-serif;font-weight:900;letter-spacing:-.04em;font-size:22px;text-transform:uppercase;will-change:transform}
+.track span{flex:0 0 auto}
+.track em{font-family:Caveat,cursive;font-style:normal;font-weight:700;text-transform:none;color:var(--mute);margin-left:8px;letter-spacing:0}
+.track .star{color:var(--rust)}
+@keyframes ticker{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+
+.topbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.banner{margin-top:14px;border:1px solid var(--rust);color:var(--fg);background:var(--cell);padding:10px 12px;font-size:11px;letter-spacing:.08em;line-height:1.6}
+.empty{color:var(--mute);padding:18px 0;border-bottom:1px solid var(--line);margin:0}
+.row .ic img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.row .ic.has-img{padding:3px;overflow:hidden}
+.tokenbox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:20px}
+.tokencard{width:min(380px,100%);background:var(--bg);border:1px solid var(--line);box-shadow:6px 6px 0 var(--rust);padding:18px}
+.tokencard .hand{font-size:34px;margin:6px 0 4px;line-height:1}
+.tokencard input{width:100%;margin:12px 0;padding:12px;background:var(--cell);border:1px solid var(--line);color:var(--fg);font-family:'Courier Prime',monospace;font-size:14px}
+.tokencard button{width:100%;min-height:46px;background:var(--rust);color:#fff;border:0;cursor:pointer}
+
+/* hero */
+.hero{position:relative;height:620px;margin:0 -18px}
+.curve{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.curve path,.curve circle{fill:none;stroke:var(--fg);stroke-opacity:.35;stroke-width:1}
+.sticker{position:absolute;display:block;
+  filter:drop-shadow(2.5px 0 0 #EFE9DC) drop-shadow(-2.5px 0 0 #EFE9DC) drop-shadow(0 2.5px 0 #EFE9DC) drop-shadow(0 -2.5px 0 #EFE9DC) drop-shadow(1px 0 0 #C7503A) drop-shadow(-1px 0 0 #C7503A) drop-shadow(0 10px 14px rgba(0,0,0,.45))}
+.s-phone{left:4%;top:5%;width:25%;transform:rotate(-13deg)}
+.s-laptop{right:-8%;top:3%;width:56%;transform:rotate(9deg)}
+.s-shoe{left:-5%;bottom:14%;width:50%;transform:rotate(-9deg)}
+.s-clock{right:3%;bottom:10%;width:33%;transform:rotate(11deg)}
+.headline{position:absolute;left:0;right:0;top:35%;text-align:center;z-index:2}
+.headline h1{margin:0;color:var(--rust);font-size:clamp(58px,18vw,82px)}
+.headline .tag{position:absolute;left:58%;top:40%;font-size:10px;padding:4px 8px}
+.herofoot{position:absolute;left:18px;right:18px;bottom:0;display:flex;justify-content:space-between;color:var(--mute);z-index:2}
+
+/* day chips */
+.days{display:flex;gap:10px;overflow-x:auto;margin:22px -18px 0;padding:6px 18px 10px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;border:1px solid var(--line);background:var(--cell);padding:10px 12px;cursor:pointer;min-height:44px}
+.day[aria-pressed="true"]{background:var(--rust);color:#fff;border-color:var(--rust)}
+
+/* sections */
+section{margin-top:64px;scroll-margin-top:20px}
+.kicker{color:var(--mute);margin-bottom:10px}
+h2{margin:10px 0 6px;font-size:52px;line-height:.9}
+.lede{font-family:Caveat,cursive;font-size:22px;line-height:1.15;color:var(--mute);margin:6px 0 18px;max-width:30ch}
+
+/* cells */
+.cells{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
+.cell{padding:14px 12px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--cell);min-height:112px;display:flex;flex-direction:column;justify-content:space-between}
+.cell:nth-child(2n){border-right:0}
+.cell:nth-last-child(-n+2){border-bottom:0}
+.cell .k{color:var(--mute)}
+.cell .v{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:36px;line-height:.95}
+.cell .v small{font-size:.5em;letter-spacing:-.02em;color:var(--mute)}
+
+/* orbit */
+.orbitwrap{position:relative;margin:0 -18px}
+.orbit{display:block;width:100%;height:auto}
+.orbit .arc{fill:none;stroke:var(--fg);stroke-opacity:.18}
+.orbit .badge{cursor:pointer}
+.orbit .badge circle.b{fill:var(--bg);stroke-width:1.6}
+.orbit .badge.sel circle.b{stroke-width:3}
+.orbit .badge text{font-family:'Courier Prime',monospace;font-weight:700;text-anchor:middle;dominant-baseline:central}
+.pick{border:1px solid var(--line);background:var(--paper);color:var(--paperInk);padding:14px;margin-top:-6px;position:relative;z-index:2;box-shadow:4px 4px 0 var(--rust)}
+.pick .n{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:30px;line-height:1;text-transform:uppercase}
+.pick .d{margin-top:6px}
+
+/* app rows */
+.rows{border-top:1px solid var(--line)}
+.row{padding:16px 0 18px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center}
+.row .ic{grid-row:1/3;width:44px;height:44px;border-radius:50%;border:1.6px solid;display:grid;place-items:center;font-weight:700;font-size:14px}
+.row .nm{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:24px;line-height:1;text-transform:uppercase}
+.row .meta{color:var(--mute);grid-column:2}
+.row .t{grid-row:1/3;grid-column:3;text-align:right;font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.04em;font-size:20px}
+.row .over{display:block;color:var(--rust);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.1em;font-weight:700}
+.ticks{grid-column:1/-1;display:flex;gap:3px;margin-top:10px;height:16px;align-items:flex-end}
+.ticks i{flex:1;height:100%;background:var(--fg);opacity:.14}
+.ticks i.on{opacity:.9}
+.ticks i.hot{background:var(--rust);opacity:1}
+
+/* timeline */
+.lanes{border:1px solid var(--line);background:var(--cell)}
+.lanehead{display:flex;justify-content:space-between;padding:10px 12px 0;color:var(--mute)}
+.lane{position:relative;height:30px;margin:6px 12px 12px;background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px calc(100%/24))}
+.seg{position:absolute;top:3px;bottom:3px;background:var(--rust)}
+.seg.lap{background:var(--fg)}
+.seg.sleep{background:repeating-linear-gradient(45deg,var(--blue) 0 3px,transparent 3px 7px);border:1px solid var(--blue)}
+.hours{display:flex;justify-content:space-between;padding:0 12px 10px;color:var(--mute)}
+
+/* ascii */
+.ascii{margin:0;border:1px solid var(--line);background:var(--cell);padding:14px 10px;font-family:'Courier Prime',monospace;font-size:clamp(11px,3.3vw,14px);line-height:1.35;overflow-x:auto;white-space:pre}
+.ascii b{color:var(--rust);font-weight:700}
+.scale{display:flex;justify-content:space-between;color:var(--mute);margin-top:8px}
+
+/* steps */
+.week{position:relative;display:flex;gap:6px;height:180px;align-items:flex-end;border-bottom:1px solid var(--line)}
+.col{flex:1;height:100%;background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column-reverse;gap:3px}
+.col i{display:block;height:5px;background:var(--fg);opacity:.16}
+.col[aria-pressed="true"] i{background:var(--rust);opacity:1}
+.goal{position:absolute;left:0;right:0;border-top:1px dashed var(--mute);pointer-events:none}
+.goal span{position:absolute;right:0;top:-20px;color:var(--mute);background:var(--bg);padding-left:6px}
+.wk{display:flex;gap:6px;margin-top:8px}
+.wk span{flex:1;text-align:center;color:var(--mute)}
+.wk span.on{color:var(--rust)}
+
+/* sleep */
+.sleepbig{font-size:clamp(76px,24vw,108px);margin:6px 0 0}
+.sleeprow{display:flex;align-items:center;gap:14px;margin-top:14px}
+.sleeprow svg{width:84px;flex:0 0 auto;transform:rotate(-8deg)}
+.note{font-size:13px;color:var(--mute);margin:0}
+
+/* split */
+.split{display:flex;height:64px;border:1px solid var(--line)}
+.split div{display:flex;flex-direction:column;justify-content:center;padding:0 12px;overflow:hidden;white-space:nowrap}
+.split .ph{background:var(--rust);color:#fff}
+.split .lp{background:var(--cell)}
+
+/* outro */
+.outro{margin-top:80px}
+.outro h2{font-size:clamp(70px,22vw,100px);margin:0}
+.foot{margin-top:18px;color:var(--mute)}
+
+/* bottom nav */
+.nav{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(404px,calc(100% - 24px));z-index:40;
+  background:var(--paper);color:var(--paperInk);box-shadow:4px 4px 0 var(--rust);padding:8px 8px 6px}
+.nav .links{display:flex}
+.nav a{flex:1;text-align:center;color:inherit;text-decoration:none;padding:8px 0;min-height:40px}
+.nav a.on{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+.prog{display:flex;gap:2px;height:10px;align-items:flex-end;padding:0 4px}
+.prog i{flex:1;height:100%;background:currentColor;opacity:.2}
+.prog i.on{background:var(--rust);opacity:1}
+.prog i:nth-child(3n){height:60%}
+.prog i:nth-child(5n){height:80%}
+
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top" id="today">
+    <div class="logo">faraz<br>khan</div>
+    <div class="topbtns">
+      <button class="theme mono" id="syncBtn" type="button" hidden>Sync</button>
+      <button class="theme mono" id="settingsBtn" type="button" hidden>Settings</button>
+      <button class="theme mono" id="theme" type="button">Theme</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero" aria-label="Footprint">
+    <svg class="curve" viewBox="0 0 400 620" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M-10 540 C 80 560, 150 470, 190 360 S 320 170, 420 250"/>
+      <circle cx="235" cy="330" r="118"/>
+      <path d="M300 120 L 250 270"/>
+    </svg>
+
+    <!-- phone -->
+    <svg class="sticker s-phone" viewBox="0 0 110 200" aria-hidden="true">
+      <rect x="4" y="4" width="102" height="192" rx="18" fill="#222325" stroke="#111" stroke-width="3"/>
+      <rect x="12" y="16" width="86" height="168" rx="11" fill="#EFE8D8"/>
+      <rect x="43" y="9" width="24" height="4" rx="2" fill="#555"/>
+      <text x="55" y="52" text-anchor="middle" font-family="Montserrat,Arial" font-weight="900" font-size="24" fill="#151515" letter-spacing="-1.5" id="stickerTime">0:00</text>
+      <text x="55" y="64" text-anchor="middle" font-family="Courier Prime,monospace" font-size="7" fill="#6d685f">SCREEN TODAY</text>
+      <g>
+        <rect x="20" y="80" width="18" height="18" rx="5" fill="#C7503A"/><rect x="46" y="80" width="18" height="18" rx="5" fill="#3F6FE0"/><rect x="72" y="80" width="18" height="18" rx="5" fill="#E3B23C"/>
+        <rect x="20" y="106" width="18" height="18" rx="5" fill="#3FB27F"/><rect x="46" y="106" width="18" height="18" rx="5" fill="#151515"/><rect x="72" y="106" width="18" height="18" rx="5" fill="#D46FA8"/>
+        <rect x="20" y="132" width="18" height="18" rx="5" fill="#8C6CE0"/><rect x="46" y="132" width="18" height="18" rx="5" fill="#E88A3A"/><rect x="72" y="132" width="18" height="18" rx="5" fill="#3FB6C9"/>
+      </g>
+      <rect x="38" y="172" width="34" height="3" rx="1.5" fill="#151515"/>
+    </svg>
+
+    <!-- laptop -->
+    <svg class="sticker s-laptop" viewBox="0 0 220 150" aria-hidden="true">
+      <defs><pattern id="keys" width="9" height="8" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="7" height="6" rx="1.2" fill="#F4EEE0" stroke="#9c9383" stroke-width=".6"/></pattern></defs>
+      <rect x="22" y="8" width="176" height="104" rx="8" fill="#E7DECB" stroke="#222" stroke-width="3"/>
+      <rect x="33" y="19" width="154" height="80" rx="3" fill="#1A1C1B"/>
+      <text x="40" y="34" font-family="Courier Prime,monospace" font-size="8" fill="#3FB27F">$ footprint sync</text>
+      <rect x="40" y="42" width="60" height="4" fill="#C7503A"/><rect x="104" y="42" width="30" height="4" fill="#555"/>
+      <rect x="40" y="52" width="92" height="4" fill="#E3B23C"/>
+      <rect x="40" y="62" width="44" height="4" fill="#3F6FE0"/><rect x="88" y="62" width="50" height="4" fill="#555"/>
+      <rect x="40" y="72" width="76" height="4" fill="#EFE8D8"/>
+      <rect x="40" y="84" width="6" height="8" fill="#3FB27F"/>
+      <path d="M6 116 H214 L204 140 H16 Z" fill="#DCD1BA" stroke="#222" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="30" y="119" width="160" height="10" fill="url(#keys)"/>
+      <rect x="92" y="131" width="36" height="6" rx="2" fill="#CFC3A9" stroke="#9c9383" stroke-width=".8"/>
+      <rect x="170" y="119" width="14" height="10" rx="1.5" fill="#C7503A"/>
+    </svg>
+
+    <!-- sneaker -->
+    <svg class="sticker s-shoe" viewBox="0 0 200 110" aria-hidden="true">
+      <path d="M16 76 Q12 48 38 42 L76 32 Q92 28 101 40 L120 58 Q152 60 176 64 Q194 68 191 78 Z" fill="#C7503A" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M58 74 L96 42 L110 52 L78 76 Z" fill="#3F6FE0" stroke="#1d1d1d" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M24 48 Q40 38 64 40" fill="none" stroke="#1d1d1d" stroke-width="3" stroke-linecap="round"/>
+      <g stroke="#EFE8D8" stroke-width="3" stroke-linecap="round"><path d="M100 44 L112 40"/><path d="M106 50 L119 46"/><path d="M112 56 L125 53"/></g>
+      <path d="M8 80 Q8 96 28 98 L180 98 Q196 97 195 83 L191 75 L12 75 Z" fill="#F2ECDF" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M14 88 H190" stroke="#1d1d1d" stroke-width="1.5" stroke-dasharray="5 4"/>
+    </svg>
+
+    <!-- alarm clock -->
+    <svg class="sticker s-clock" viewBox="0 0 160 170" aria-hidden="true">
+      <path d="M22 44 A26 26 0 0 1 60 14 Z" fill="#C7503A" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M138 44 A26 26 0 0 0 100 14 Z" fill="#C7503A" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M50 150 L38 164 M110 150 L122 164" stroke="#1d1d1d" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="80" cy="96" r="60" fill="#E7DECB" stroke="#1d1d1d" stroke-width="4"/>
+      <circle cx="80" cy="96" r="47" fill="#F6F1E6" stroke="#1d1d1d" stroke-width="1.5"/>
+      <g stroke="#1d1d1d" stroke-width="3" stroke-linecap="round"><path d="M80 54 V62"/><path d="M80 130 V138"/><path d="M38 96 H46"/><path d="M114 96 H122"/></g>
+      <path d="M80 96 L80 68" stroke="#1d1d1d" stroke-width="4" stroke-linecap="round"/>
+      <path d="M80 96 L100 108" stroke="#C7503A" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="80" cy="96" r="4" fill="#1d1d1d"/>
+      <text x="112" y="28" font-family="Caveat,cursive" font-weight="700" font-size="22" fill="#3F6FE0">z z</text>
+    </svg>
+
+    <div class="headline">
+      <h1 class="heavy">Screens<br>Steps &amp;<br>Sleep.</h1>
+      <span class="tag mono">Live log</span>
+    </div>
+
+    <div class="herofoot mono"><span id="heroDate"></span><span>Scroll ↓</span></div>
+  </div>
+
+  <div class="ticker" aria-hidden="true"><div class="track" id="track"></div></div>
+
+  <nav class="days" id="days" aria-label="Choose a day"></nav>
+  <div class="banner mono" id="banner" role="status" hidden></div>
+
+  <!-- NUMBERS -->
+  <section>
+    <div class="kicker mono">The day in numbers</div>
+    <div class="cells">
+      <div class="cell"><span class="k mono">01 / Screen</span><span class="v" id="cScreen"></span></div>
+      <div class="cell"><span class="k mono">02 / Steps</span><span class="v" id="cSteps"></span></div>
+      <div class="cell"><span class="k mono">03 / Sleep</span><span class="v" id="cSleep"></span></div>
+      <div class="cell"><span class="k mono">04 / Unlocks</span><span class="v" id="cUnlocks"></span></div>
+    </div>
+  </section>
+
+  <!-- ORBIT -->
+  <section id="apps">
+    <span class="tag mono">05 / App map</span>
+    <h2 class="hand">Apps in Orbit</h2>
+    <p class="lede">The inner ring took most of your day. Tap an app to see how long.</p>
+    <div class="orbitwrap">
+      <svg class="orbit" id="orbit" viewBox="-20 0 400 262" role="group" aria-label="Apps arranged by time spent"></svg>
+    </div>
+    <div class="pick" id="pick" aria-live="polite"></div>
+  </section>
+
+  <!-- LIST -->
+  <section>
+    <div class="kicker mono">Every app, ranked</div>
+    <h2 class="heavy">Where it<br><span class="outline">went.</span></h2>
+    <p class="lede">Social apps go red once they pass your one-hour limit.</p>
+    <div class="rows" id="rows"></div>
+  </section>
+
+  <!-- 24H -->
+  <section id="day">
+    <span class="tag mono">06 / Timeline</span>
+    <h2 class="hand">Your 24 Hours</h2>
+    <p class="lede">Every session from your phone and laptop, laid across the day.</p>
+    <div class="lanes">
+      <div class="lanehead mono"><span>Sleep, estimated</span><span id="lSleep"></span></div>
+      <div class="lane" id="laneSleep"></div>
+      <div class="lanehead mono"><span>Phone</span><span id="lPhone"></span></div>
+      <div class="lane" id="lanePhone"></div>
+      <div class="lanehead mono"><span>Laptop</span><span id="lLap"></span></div>
+      <div class="lane" id="laneLap"></div>
+      <div class="hours mono"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+    </div>
+  </section>
+
+  <!-- ASCII WEEK -->
+  <section>
+    <div class="kicker mono">Screen time by hour</div>
+    <h2 class="heavy">The week<br><span class="outline">in ASCII.</span></h2>
+    <p class="lede">Denser characters mean more screen time in that hour.</p>
+    <pre class="ascii" id="ascii"></pre>
+    <div class="scale mono"><span>idle  . : - = + * # %  @ full hour</span></div>
+  </section>
+
+  <!-- STEPS -->
+  <section id="body">
+    <span class="tag mono">07 / Movement</span>
+    <h2 class="hand">Steps This Week</h2>
+    <p class="lede">Counted by your phone's step sensor, so only while it's on you. Tap a day to open it.</p>
+    <div class="week" id="week"></div>
+    <div class="wk mono" id="wk"></div>
+  </section>
+
+  <!-- SLEEP -->
+  <section>
+    <div class="kicker mono">Last night</div>
+    <p class="sleepbig heavy outline" id="sleepBig"></p>
+    <div class="sleeprow">
+      <svg viewBox="0 0 100 100" aria-hidden="true" class="sticker" style="position:static">
+        <path d="M66 12 A40 40 0 1 0 88 70 A32 32 0 1 1 66 12 Z" fill="#E3B23C" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="40" cy="58" r="4" fill="#C9962C"/><circle cx="54" cy="76" r="3" fill="#C9962C"/>
+      </svg>
+      <p class="note" id="sleepNote"></p>
+    </div>
+  </section>
+
+  <!-- SPLIT -->
+  <section>
+    <div class="kicker mono">Where your screen time lives</div>
+    <h2 class="heavy">Phone<br><span class="outline">vs laptop.</span></h2>
+    <div class="split" id="split" style="margin-top:18px"></div>
+  </section>
+
+  <!-- OUTRO -->
+  <section class="outro">
+    <h2 class="heavy">Log<br><span class="outline">off.</span></h2>
+    <div class="cells" style="margin-top:22px">
+      <div class="cell" style="min-height:84px"><span class="k mono">Sources</span><span class="mono" id="cellSources">Phone + laptop</span></div>
+      <div class="cell" style="min-height:84px"><span class="k mono">Sync</span><span class="mono" id="cellSync">Every 15 min</span></div>
+    </div>
+    <p class="foot mono" id="foot">Loading…</p>
+  </section>
+</div>
+
+<div class="tokenbox" id="tokenbox" hidden>
+  <div class="tokencard" role="dialog" aria-labelledby="tokentitle">
+    <div class="mono">Connect this browser</div>
+    <p class="hand" id="tokentitle">Paste your read token</p>
+    <p class="note" id="tokenmsg">It's the READ_TOKEN line in server\.env on your laptop. It's saved only in this browser.</p>
+    <input id="tokeninput" type="password" autocomplete="off" spellcheck="false" aria-label="Read token">
+    <button id="tokensave" class="mono" type="button">Connect</button>
+  </div>
+</div>
+
+<nav class="nav mono" aria-label="Sections">
+  <div class="links">
+    <a href="#today" data-s="today">Today</a>
+    <a href="#apps" data-s="apps">Apps</a>
+    <a href="#day" data-s="day">Day</a>
+    <a href="#body" data-s="body">Body</a>
+  </div>
+  <div class="prog" id="prog" aria-hidden="true"></div>
+</nav>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const root = document.documentElement;
+
+  // ---------- storage (never throws) ----------
+  const store = {
+    get: k => { try { return localStorage.getItem(k); } catch(e){ return null; } },
+    set: (k,v) => { try { localStorage.setItem(k, v); } catch(e){} },
+    del: k => { try { localStorage.removeItem(k); } catch(e){} }
+  };
+
+  // ---------- theme ----------
+  const savedTheme = store.get('fp-theme');
+  if (savedTheme) root.dataset.theme = savedTheme;
+  $('theme').addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    store.set('fp-theme', root.dataset.theme);
+  });
+
+  // ---------- helpers ----------
+  const LIMIT = 60, GOAL = 8000;
+  const PALETTE = ['#D46FA8','#D9583E','#3FB27F','#E88A3A','#9BC53D','#3FB6C9','#3F6FE0','#E3B23C','#8C6CE0','#EDE7DA'];
+  const MONOGRAMS = {'Terminal':'>_'};
+  const esc = v => String(v).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const b64ok = v => typeof v === 'string' && v.length < 200000 && /^[A-Za-z0-9+/=]+$/.test(v);
+  const monogram = n => {
+    if (MONOGRAMS[n]) return MONOGRAMS[n];
+    const caps = n.match(/[A-Z0-9]/g) || [];
+    const mg = caps.length >= 2 ? caps[0] + caps[1] : n.replace(/[^A-Za-z0-9]/g, '').slice(0, 2);
+    return (mg || '??').toUpperCase();
+  };
+  const colorFor = n => { let h = 0; for (const ch of n) h = (h*31 + ch.charCodeAt(0)) >>> 0; return PALETTE[h % PALETTE.length]; };
+  const fmt = m => { m = Math.round(m); const h = Math.floor(m/60), mm = m%60; return h ? `${h}h ${mm}m` : `${mm}m`; };
+  const hmHtml = m => { m = Math.round(m); return `${Math.floor(m/60)}<small>h</small>${String(m%60).padStart(2,'0')}<small>m</small>`; };
+  const clock = m => { m = ((Math.round(m) % 1440) + 1440) % 1440; return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0'); };
+  const localISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const ago = ms => { const min = Math.round((Date.now() - ms)/60000); return min < 1 ? 'just now' : min < 60 ? `${min} min ago` : min < 1440 ? `${Math.round(min/60)} h ago` : `${Math.round(min/1440)} d ago`; };
+
+  // ---------- data shaping ----------
+  let ICONS = {};
+  const decorate = a => ({
+    n: a.n, d: a.d, cat: a.cat || 'Other', m: a.m,
+    mg: monogram(a.n), c: colorFor(a.n), social: a.cat === 'Social',
+    icon: b64ok(ICONS[a.n]) ? ICONS[a.n] : null
+  });
+  const fromApi = s => {
+    const [y, mo, dd] = s.date.split('-').map(Number);
+    return {
+      date: new Date(y, mo-1, dd), apps: (s.apps || []).map(decorate),
+      bed: s.bed, wake: s.wake, sleep: s.sleep,
+      steps: s.steps || 0, unlocks: s.unlocks || 0,
+      phone: s.phone || [], laptop: s.laptop || []
+    };
+  };
+  const lastSevenDates = () => {
+    const t = new Date(); t.setHours(0,0,0,0);
+    return Array.from({length:7}, (_,i) => { const d = new Date(t); d.setDate(d.getDate() - (6-i)); return d; });
+  };
+  const emptyWeek = () => lastSevenDates().map(d => fromApi({date: localISO(d)}));
+
+  // Sample data, only used when this page isn't connected to your server (e.g. a shared preview).
+  const SAMPLE = [
+    {n:'Instagram',d:'phone',cat:'Social',b:70},{n:'YouTube',d:'phone',cat:'Video',b:55},{n:'WhatsApp',d:'phone',cat:'Chat',b:35},
+    {n:'Reddit',d:'phone',cat:'Social',b:22},{n:'Spotify',d:'phone',cat:'Music',b:15},{n:'Telegram',d:'phone',cat:'Chat',b:12},
+    {n:'VS Code',d:'laptop',cat:'Code',b:95},{n:'Chrome',d:'laptop',cat:'Browser',b:80},{n:'Terminal',d:'laptop',cat:'Code',b:40},
+    {n:'TryHackMe',d:'laptop',cat:'Learning',b:30}
+  ];
+  const rng = s => () => { s = (Math.imul(s,1664525) + 1013904223) >>> 0; return s/4294967296; };
+  const sampleWeek = () => lastSevenDates().map(date => {
+    const r = rng(date.getFullYear()*1000 + date.getMonth()*40 + date.getDate()); r(); r();
+    const apps = SAMPLE.map(a => ({n:a.n, d:a.d, cat:a.cat, m:Math.round(a.b*(.45 + r()*1.1))})).sort((x,y) => y.m - x.m);
+    const bed = 23*60 + Math.round(r()*150), wake = 6*60 + 30 + Math.round(r()*110);
+    const phone = [], laptop = [];
+    let t = wake + 5;
+    while (t < 23*60){ const len = 5 + r()*35; phone.push([t, t+len]); t += len + 20 + r()*70; }
+    t = 10*60 + r()*60;
+    while (t < 23*60 + 30){ const len = 30 + r()*80; laptop.push([t, Math.min(t+len,1440)]); t += len + 30 + r()*90; }
+    return fromApi({date: localISO(date), apps, bed, wake, sleep:(1440-bed)+wake,
+                    steps: Math.round(2800 + r()*7400), unlocks: Math.round(55 + r()*70), phone, laptop});
+  });
+
+  // ---------- data sources ----------
+  // 1. Inside the Footprint Android app: requests go through the app, which signs them natively.
+  function bridgeSource(){
+    const bridge = window.FootprintBridge;
+    let seq = 0; const pending = new Map();
+    bridge.onmessage = ev => {
+      let msg; try { msg = JSON.parse(ev.data); } catch(e){ return; }
+      const done = pending.get(msg.id);
+      if (done){ pending.delete(msg.id); done(msg); }
+    };
+    const call = msg => new Promise((resolve, reject) => {
+      const id = String(++seq);
+      pending.set(id, resolve);
+      bridge.postMessage(JSON.stringify(Object.assign({id}, msg)));
+      setTimeout(() => { if (pending.delete(id)) reject(new Error('The app did not respond')); }, 30000);
+    });
+    return {
+      kind: 'app',
+      async get(path){
+        const r = await call({op:'get', path});
+        if (r.status !== 200) throw new Error(r.error || `Server answered ${r.status}`);
+        return JSON.parse(r.body);
+      },
+      async status(){ return JSON.parse((await call({op:'status'})).body); },
+      sync: () => call({op:'sync'}),
+      settings: () => call({op:'settings'})
+    };
+  }
+  // 2. In a browser, served by your laptop: same-origin API with the read token.
+  function webSource(){
+    return {
+      kind: 'web',
+      async get(path){
+        const token = store.get('fp-read-token');
+        if (!token) throw Object.assign(new Error('Connect this browser with your read token'), {needToken:true});
+        const r = await fetch(path, {headers: {Authorization: 'Bearer ' + token}, cache: 'no-store'});
+        if (r.status === 401){ store.del('fp-read-token'); throw Object.assign(new Error('That read token was rejected'), {needToken:true}); }
+        if (!r.ok) throw new Error(`Server answered ${r.status}`);
+        return r.json();
+      }
+    };
+  }
+  // 3. Anywhere else: sample data.
+  async function detectSource(){
+    if (window.FootprintBridge && typeof window.FootprintBridge.postMessage === 'function') return bridgeSource();
+    try {
+      const ctrl = new AbortController(); setTimeout(() => ctrl.abort(), 4000);
+      const r = await fetch('/health', {cache:'no-store', signal: ctrl.signal});
+      if (r.ok && (await r.json()).ok === true) return webSource();
+    } catch(e){}
+    return {kind:'demo'};
+  }
+
+  // ---------- state ----------
+  let src = {kind:'demo'};
+  let DAYS = emptyWeek();
+  let cur = 6, selApp = 0;
+
+  function setBanner(text){ $('banner').textContent = text || ''; $('banner').hidden = !text; }
+
+  async function load(){
+    if (src.kind === 'demo'){
+      DAYS = sampleWeek();
+      setBanner('Sample data. Open the Footprint app, or this page from your laptop, to see your own day.');
+      $('foot').textContent = 'Showing sample data.';
+      return;
+    }
+    try {
+      const end = localISO(new Date());
+      const [week, icons] = await Promise.all([
+        src.get(`/v1/summary/week?end=${end}`),
+        src.get('/v1/icons').catch(() => ({}))
+      ]);
+      ICONS = icons || {};
+      DAYS = week.map(fromApi);
+      store.set('fp-cache', JSON.stringify({week, icons: ICONS, at: Date.now()}));
+      setBanner('');
+      $('foot').textContent = `Updated ${new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})}.`;
+    } catch(e){
+      if (e.needToken) askToken(e.message);
+      let cached = null;
+      try { cached = JSON.parse(store.get('fp-cache') || 'null'); } catch(_){}
+      if (cached && Array.isArray(cached.week)){
+        ICONS = cached.icons || {};
+        DAYS = cached.week.map(fromApi);
+        setBanner(`${e.message}. Showing what was loaded ${ago(cached.at)}.`);
+      } else {
+        DAYS = emptyWeek();
+        setBanner(e.message + '.');
+      }
+      $('foot').textContent = 'Not connected.';
+    }
+  }
+
+  async function showStatus(){
+    if (src.kind !== 'app'){ $('cellSync').textContent = 'Every 15 min'; return; }
+    try {
+      const st = await src.status();
+      $('cellSync').textContent = st.last_sync ? `${ago(st.last_sync)}, ${st.queued} waiting` : 'Not synced yet';
+    } catch(e){ $('cellSync').textContent = 'Every 15 min'; }
+  }
+
+  async function refresh(){
+    await load();
+    if (cur >= DAYS.length) cur = DAYS.length - 1;
+    select(cur);
+    showStatus();
+  }
+  window.fpRefresh = refresh;   // the Android app calls this when you come back to the dashboard
+
+  // ---------- token dialog (browser only) ----------
+  function askToken(msg){
+    $('tokenmsg').textContent = (msg && msg.includes('rejected') ? 'That token was rejected. ' : '') +
+      "It's the READ_TOKEN line in server\\.env on your laptop. It's saved only in this browser.";
+    $('tokenbox').hidden = false;
+    setTimeout(() => $('tokeninput').focus(), 50);
+  }
+  $('tokensave').addEventListener('click', () => {
+    const v = $('tokeninput').value.trim();
+    if (!v) return;
+    store.set('fp-read-token', v);
+    $('tokeninput').value = '';
+    $('tokenbox').hidden = true;
+    refresh();
+  });
+  $('tokeninput').addEventListener('keydown', e => { if (e.key === 'Enter') $('tokensave').click(); });
+
+  // ---------- day chips ----------
+  const label = i => i === DAYS.length-1 ? 'Today' : i === DAYS.length-2 ? 'Yesterday'
+    : DAYS[i].date.toLocaleDateString('en-GB', {weekday:'short', day:'numeric'});
+  function chips(){
+    $('days').innerHTML = DAYS.map((_,i) => `<button class="day mono" type="button" data-i="${i}" aria-pressed="${i===cur}">${label(i)}</button>`).join('');
+    const on = $('days').querySelector('[aria-pressed="true"]');
+    if (on) $('days').scrollLeft = on.offsetLeft - $('days').clientWidth + on.offsetWidth + 18;
+  }
+  $('days').addEventListener('click', e => { const b = e.target.closest('.day'); if (b) select(+b.dataset.i); });
+
+  // ---------- orbit ----------
+  const C = {x:180, y:252}, RADII = [92, 142, 192];
+  const RANGE = [[200,340],[196,344],[204,336]];
+  let badges = [], raf = null;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DUST = (() => {
+    const r = rng(42); let s = '';
+    const cols = ['var(--fg)','#C7503A','#3F6FE0','var(--fg)'];
+    for (let i=0;i<190;i++){
+      const a = Math.PI + r()*Math.PI, rad = 66*Math.sqrt(r());
+      s += `<circle cx="${(C.x+Math.cos(a)*rad).toFixed(1)}" cy="${(C.y+Math.sin(a)*rad).toFixed(1)}" r="${(0.7+r()*0.9).toFixed(2)}" fill="${cols[i%4]}" opacity="${(0.35+r()*0.6).toFixed(2)}"/>`;
+    }
+    return s;
+  })();
+
+  function drawOrbit(d){
+    const apps = d.apps.slice(0, 10);
+    const max = apps.length ? apps[0].m : 1;
+    let html = RADII.map(r => `<path class="arc" d="M${C.x-r} ${C.y} A${r} ${r} 0 0 1 ${C.x+r} ${C.y}"/>`).join('') + DUST;
+    const perRing = [Math.min(3, apps.length), Math.min(3, Math.max(apps.length-3, 0)), Math.max(apps.length-6, 0)];
+    badges = apps.map((a,i) => {
+      const ring = i < 3 ? 0 : i < 6 ? 1 : 2, idx = ring === 0 ? i : ring === 1 ? i-3 : i-6;
+      const [a0,a1] = RANGE[ring];
+      const deg = a0 + (a1-a0)*((idx+0.5)/perRing[ring]) + (ring === 1 ? 8 : 0);
+      return {a, i, ring, base: deg*Math.PI/180, size: 13 + Math.sqrt(Math.max(a.m,0)/Math.max(max,1))*10, seed: i*1.7};
+    });
+    html += badges.map(b => {
+      const r = b.size, ir = (r - 2.5).toFixed(1);
+      const inner = b.a.icon
+        ? `<clipPath id="cp${b.i}"><circle r="${ir}"/></clipPath><image href="data:image/png;base64,${b.a.icon}" x="-${ir}" y="-${ir}" width="${(2*ir).toFixed(1)}" height="${(2*ir).toFixed(1)}" clip-path="url(#cp${b.i})"/>`
+        : `<text font-size="${(r*0.72).toFixed(1)}" fill="${b.a.c}">${esc(b.a.mg)}</text>`;
+      return `<g class="badge${b.i===selApp?' sel':''}" data-i="${b.i}" tabindex="0" role="button" aria-label="${esc(b.a.n)}, ${fmt(b.a.m)}"><circle class="b" r="${r.toFixed(1)}" stroke="${b.a.c}"/>${inner}</g>`;
+    }).join('');
+    $('orbit').innerHTML = html;
+    badges.forEach(b => b.el = $('orbit').querySelector(`[data-i="${b.i}"]`));
+    place(performance.now());
+    if (!still && !raf) raf = requestAnimationFrame(loop);
+  }
+  function place(t){
+    badges.forEach(b => {
+      const ang = b.base + Math.sin(t/4200 + b.seed)*0.035, r = RADII[b.ring];
+      b.el.setAttribute('transform', `translate(${(C.x+Math.cos(ang)*r).toFixed(1)},${(C.y+Math.sin(ang)*r).toFixed(1)})`);
+    });
+  }
+  function loop(t){ place(t); raf = requestAnimationFrame(loop); }
+
+  function pick(){
+    const d = DAYS[cur], a = d.apps[selApp];
+    if (!a){
+      $('pick').innerHTML = `<div class="mono">Nothing yet</div><div class="d mono">No app use recorded for this day.</div>`;
+      return;
+    }
+    const total = d.apps.reduce((s,x) => s + x.m, 0) || 1;
+    $('pick').innerHTML = `<div class="mono">${String(selApp+1).padStart(2,'0')} / ${esc(a.cat)} / ${esc(a.d)}</div>
+      <div class="n">${esc(a.n)}</div>
+      <div class="d mono">${fmt(a.m)} · ${Math.round(a.m/total*100)}% of screen time</div>`;
+    badges.forEach(b => b.el.classList.toggle('sel', b.i === selApp));
+  }
+  const choose = e => { const g = e.target.closest('.badge'); if (!g) return; selApp = +g.dataset.i; pick(); };
+  $('orbit').addEventListener('click', choose);
+  $('orbit').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); choose(e); } });
+
+  // ---------- render ----------
+  const lane = (el, blocks, cls) => el.innerHTML = blocks.map(([s,e]) =>
+    `<span class="seg ${cls}" style="left:${(s/1440*100).toFixed(2)}%;width:${Math.max((e-s)/1440*100,.5).toFixed(2)}%"></span>`).join('');
+
+  function hourly(d){
+    const h = new Array(24).fill(0);
+    [...d.phone, ...d.laptop].forEach(([s,e]) => { for (let m = Math.floor(s); m < e && m < 1440; m++) if (m >= 0) h[Math.floor(m/60)]++; });
+    return h.map(v => Math.min(v, 60));
+  }
+
+  function render(){
+    const d = DAYS[cur];
+    const total = d.apps.reduce((s,a) => s + a.m, 0);
+    const ph = d.apps.filter(a => a.d === 'phone').reduce((s,a) => s + a.m, 0), lp = total - ph;
+
+    $('heroDate').textContent = d.date.toLocaleDateString('en-GB', {weekday:'short', day:'numeric', month:'short'});
+    $('stickerTime').textContent = `${Math.floor(total/60)}:${String(Math.round(total%60)).padStart(2,'0')}`;
+    $('cScreen').innerHTML = hmHtml(total);
+    $('cSteps').textContent = d.steps.toLocaleString('en-IN');
+    $('cSleep').innerHTML = d.sleep == null ? '<small>no data</small>' : hmHtml(d.sleep);
+    $('cUnlocks').textContent = d.unlocks;
+
+    const top = d.apps.slice(0, 6);
+    const items = top.length
+      ? top.map(a => `<span>${esc(a.n)}<em>${fmt(a.m)}</em></span><span class="star">✦</span>`).join('')
+      : `<span>No screen time yet<em>for this day</em></span><span class="star">✦</span>`;
+    $('track').innerHTML = items + items;
+
+    drawOrbit(d); pick();
+
+    if (!d.apps.length){
+      $('rows').innerHTML = `<p class="empty mono">No app use recorded for this day yet.</p>`;
+    } else {
+      const max = d.apps[0].m || 1, N = 34;
+      $('rows').innerHTML = d.apps.map((a,i) => {
+        const over = a.social && a.m > LIMIT, on = Math.round(a.m/max*N), lim = Math.round(LIMIT/max*N);
+        const ticks = Array.from({length:N}, (_,k) => `<i class="${k<on ? (over && k>=lim ? 'hot' : 'on') : ''}"></i>`).join('');
+        const ic = a.icon
+          ? `<div class="ic has-img" style="border-color:${a.c}"><img src="data:image/png;base64,${a.icon}" alt=""></div>`
+          : `<div class="ic mono" style="border-color:${a.c};color:${a.c}">${esc(a.mg)}</div>`;
+        return `<div class="row">${ic}
+          <div class="nm">${esc(a.n)}</div>
+          <div class="t">${fmt(a.m)}${over ? `<span class="over">+${fmt(a.m-LIMIT)} over</span>` : ''}</div>
+          <div class="meta mono">${String(i+1).padStart(2,'0')} / ${esc(a.cat)} / ${esc(a.d)}</div>
+          <div class="ticks">${ticks}</div></div>`;
+      }).join('');
+    }
+
+    if (d.sleep != null){
+      lane($('laneSleep'), [[d.bed >= 1440 ? d.bed - 1440 : 0, d.wake]], 'sleep');
+      $('lSleep').textContent = `${clock(d.bed)}–${clock(d.wake)}`;
+    } else {
+      lane($('laneSleep'), [], 'sleep');
+      $('lSleep').textContent = 'not enough data';
+    }
+    lane($('lanePhone'), d.phone, '');
+    lane($('laneLap'), d.laptop, 'lap');
+    $('lPhone').textContent = fmt(ph); $('lLap').textContent = fmt(lp);
+
+    const ramp = ' .:-=+*#%@';
+    $('ascii').innerHTML = '     0     6     12    18   \n' + DAYS.map((x,i) => {
+      const row = hourly(x).map(v => ramp[Math.min(9, Math.round(v/60*9))]).join('');
+      const name = x.date.toLocaleDateString('en-GB', {weekday:'short'}).toUpperCase();
+      return i === cur ? `<b>${name}  ${row}</b>` : `${name}  ${row}`;
+    }).join('\n');
+
+    const SCALE = Math.max(11000, ...DAYS.map(x => x.steps * 1.1)), STEP = SCALE / 27;
+    $('week').innerHTML = `<div class="goal mono" style="bottom:${GOAL/SCALE*100}%"><span>8,000 goal</span></div>` +
+      DAYS.map((x,i) => `<button class="col" type="button" data-i="${i}" aria-pressed="${i===cur}" aria-label="${label(i)}: ${x.steps} steps">${'<i></i>'.repeat(Math.round(x.steps/STEP))}</button>`).join('');
+    $('wk').innerHTML = DAYS.map((x,i) => `<span class="${i===cur?'on':''}">${x.date.toLocaleDateString('en-GB',{weekday:'narrow'})}</span>`).join('');
+
+    if (d.sleep != null){
+      $('sleepBig').textContent = `${Math.floor(d.sleep/60)}h${String(Math.round(d.sleep%60)).padStart(2,'0')}m`;
+      $('sleepNote').textContent = `Asleep around ${clock(d.bed)}, up at ${clock(d.wake)}. Estimated from your last phone and laptop use at night and your first in the morning.`;
+    } else {
+      $('sleepBig').textContent = '—';
+      $('sleepNote').textContent = 'Not enough data yet. Sleep shows up the morning after a night with your phone syncing.';
+    }
+
+    const p = total ? Math.round(ph/total*100) : 50;
+    $('split').innerHTML = `<div class="ph" style="width:${p}%"><span class="mono">Phone</span><strong>${fmt(ph)}</strong></div><div class="lp" style="width:${100-p}%"><span class="mono">Laptop</span><strong>${fmt(lp)}</strong></div>`;
+  }
+  $('week').addEventListener('click', e => { const b = e.target.closest('.col'); if (b) select(+b.dataset.i); });
+
+  function select(i){ cur = i; selApp = 0; chips(); render(); }
+
+  // ---------- app buttons ----------
+  $('syncBtn').addEventListener('click', async () => {
+    if (src.kind !== 'app') return;
+    setBanner('Syncing your phone and refreshing…');
+    try { await src.sync(); } catch(e){}
+    setTimeout(refresh, 7000);
+  });
+  $('settingsBtn').addEventListener('click', () => { if (src.kind === 'app') src.settings(); });
+
+  // ---------- bottom nav progress ----------
+  const NT = 44;
+  $('prog').innerHTML = '<i></i>'.repeat(NT);
+  const ticks = [...$('prog').children], links = [...document.querySelectorAll('.nav a')];
+  function onScroll(){
+    const h = document.documentElement.scrollHeight - innerHeight;
+    const f = h > 0 ? scrollY / h : 0, on = Math.round(f*NT);
+    ticks.forEach((t,k) => t.classList.toggle('on', k < on));
+    let active = 'today';
+    ['apps','day','body'].forEach(id => { if ($(id).getBoundingClientRect().top < innerHeight*0.4) active = id; });
+    links.forEach(a => a.classList.toggle('on', a.dataset.s === active));
+  }
+  addEventListener('scroll', onScroll, {passive:true});
+
+  // ---------- start ----------
+  select(cur); onScroll();
+  detectSource().then(s => {
+    src = s;
+    $('syncBtn').hidden = $('settingsBtn').hidden = s.kind !== 'app';
+    $('cellSources').textContent = s.kind === 'demo' ? 'Sample data' : 'Phone + laptop';
+    return refresh();
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && src.kind === 'web') refresh(); });
+})();
+</script>
+</body>
+</html>

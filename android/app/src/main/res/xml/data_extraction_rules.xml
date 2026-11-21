@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Your screen-time database never leaves the phone, not even through backup or device transfer. -->
+<data-extraction-rules>
+    <cloud-backup><exclude domain="root" /></cloud-backup>
+    <device-transfer><exclude domain="root" /></device-transfer>
+</data-extraction-rules>

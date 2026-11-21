@@ -1,0 +1,8 @@
+# Windows has no built-in timezone database; zoneinfo needs this
+tzdata>=2024.1
+fastapi>=0.115
+uvicorn[standard]>=0.30
+sqlalchemy>=2.0
+pydantic>=2.7
+# for Postgres instead of SQLite:
+# psycopg[binary]>=3.2

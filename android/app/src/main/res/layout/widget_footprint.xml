@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One page at a time, drawn by FootprintWidget. The chevrons move between sections and the
+     dots show where you are. RemoteViews cannot add views at runtime, so every row and dot
+     exists here and the unused ones are hidden. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="14dp"
+    android:background="@drawable/widget_bg">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:baselineAligned="false">
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/widget_label" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="@string/widget_today"
+                android:textColor="#8D897F" android:textSize="9sp"
+                android:fontFamily="@font/courier_prime" android:letterSpacing="0.22" />
+            <TextView android:id="@+id/widget_total" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:textColor="#C7503A"
+                android:textSize="30sp" android:fontFamily="@font/montserrat_black"
+                android:includeFontPadding="false" android:letterSpacing="-0.02" />
+        </LinearLayout>
+
+        <ImageView android:id="@+id/nav_prev" android:layout_width="32dp" android:layout_height="32dp"
+            android:padding="4dp" android:src="@drawable/ic_chev_left"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/nav_next" android:layout_width="32dp" android:layout_height="32dp"
+            android:padding="4dp" android:src="@drawable/ic_chev_right"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- an ImageView, not a View: RemoteViews only allows a fixed set of view types -->
+    <ImageView android:layout_width="match_parent" android:layout_height="1dp"
+        android:layout_marginTop="8dp" android:background="#262623"
+        android:contentDescription="@null" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:paddingTop="8dp" android:paddingBottom="2dp"
+        android:baselineAligned="false">
+        <TextView android:id="@+id/card_title" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:textColor="#C7503A" android:textSize="9sp"
+            android:fontFamily="@font/courier_prime_bold" android:letterSpacing="0.22" />
+        <LinearLayout android:id="@+id/dots" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:orientation="horizontal"
+            android:gravity="center_vertical">
+        <ImageView android:id="@+id/dot1" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot2" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot3" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot4" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot5" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot6" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot7" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        <ImageView android:id="@+id/dot8" android:layout_width="6dp" android:layout_height="6dp"
+            android:layout_marginStart="5dp" android:src="@drawable/dot_off"
+            android:contentDescription="@null" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- a question page -->
+    <LinearLayout android:id="@+id/q_block" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical"
+        android:paddingTop="6dp">
+        <TextView android:id="@+id/q_title" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:maxLines="1" android:ellipsize="end"
+            android:textColor="#EFEBE2" android:textSize="26sp"
+            android:fontFamily="@font/montserrat_black" android:includeFontPadding="false"
+            android:letterSpacing="-0.02" />
+        <TextView android:id="@+id/q_sub" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginTop="3dp"
+            android:textColor="#8D897F" android:textSize="10sp"
+            android:fontFamily="@font/courier_prime" android:letterSpacing="0.08" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:layout_marginTop="12dp">
+            <TextView android:id="@+id/q_yes" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:layout_marginEnd="8dp" android:gravity="center"
+                android:paddingTop="11dp" android:paddingBottom="11dp"
+                android:text="@string/widget_worth" android:textColor="#EFEBE2"
+                android:textSize="11sp" android:fontFamily="@font/courier_prime_bold"
+                android:letterSpacing="0.06" android:background="@drawable/widget_btn" />
+            <TextView android:id="@+id/q_no" android:layout_width="0dp"
+                android:layout_height="wrap_content" android:layout_weight="1"
+                android:gravity="center" android:paddingTop="11dp" android:paddingBottom="11dp"
+                android:text="@string/widget_not_worth" android:textColor="#151515"
+                android:textSize="11sp" android:fontFamily="@font/courier_prime_bold"
+                android:letterSpacing="0.06" android:background="@drawable/widget_btn_rust" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- a list page -->
+    <LinearLayout android:id="@+id/list_block" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical">
+
+        <LinearLayout android:id="@+id/row1" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row1_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row1_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row1_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row1_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row1_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/row2" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row2_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row2_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row2_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row2_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row2_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/row3" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row3_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row3_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row3_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row3_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row3_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/row4" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row4_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row4_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row4_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row4_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row4_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/row5" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row5_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row5_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row5_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row5_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row5_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/row6" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row6_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row6_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row6_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row6_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row6_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/row7" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="vertical"
+            android:paddingTop="5dp" android:paddingBottom="5dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:baselineAligned="true">
+                <TextView android:id="@+id/row7_rank" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginEnd="7dp"
+                    android:textColor="#6E6A62" android:textSize="10sp"
+                    android:fontFamily="@font/courier_prime" android:letterSpacing="0.06" />
+                <TextView android:id="@+id/row7_title" android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:maxLines="1" android:ellipsize="end"
+                    android:textColor="#EFEBE2" android:textSize="13sp"
+                    android:fontFamily="@font/montserrat_black" android:includeFontPadding="false" />
+                <TextView android:id="@+id/row7_value" android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:textColor="#EFEBE2"
+                    android:textSize="13sp" android:fontFamily="@font/courier_prime_bold" />
+            </LinearLayout>
+            <TextView android:id="@+id/row7_sub" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:textColor="#8D897F"
+                android:textSize="9sp" android:fontFamily="@font/courier_prime"
+                android:letterSpacing="0.08" />
+            <ProgressBar android:id="@+id/row7_bar" style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent" android:layout_height="4dp"
+                android:layout_marginTop="4dp" android:max="100"
+                android:progressDrawable="@drawable/widget_bar" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView android:id="@+id/widget_empty" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="@string/widget_empty"
+        android:textColor="#8D897F" android:textSize="10sp"
+        android:fontFamily="@font/courier_prime" />
+</LinearLayout>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reels_service_label">Footprint: Reels and Shorts</string>
+    <string name="reels_service_description">Leaves YouTube Shorts, Instagram Reels and Snapchat Spotlight when you open them, if you turned that on in Footprint. It only looks at those three apps, and only at which screen and tab is showing, never at messages or anything you type. Nothing leaves your phone: Footprint has no internet permission.</string>
+</resources>

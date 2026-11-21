@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Footprint</string>
+    <string name="widget_today">TODAY</string>
+    <string name="widget_description">Today\'s screen time, the sessions waiting to be judged, your limits and the week.</string>
+    <string name="widget_empty">Nothing recorded yet. Open Footprint to set it up.</string>
+    <string name="widget_worth">Worth it</string>
+    <string name="widget_not_worth">Not worth it</string>
+</resources>

@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151515">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'none'">
+<title>Footprint</title>
+<style>
+
+:root{
+  --bg:#E8E2D4;--fg:#151515;--mute:#6d685f;--line:rgba(21,21,21,.16);--grid:rgba(21,21,21,.05);
+  --paper:#151515;--paperInk:#EDE7DA;--rust:#C7503A;--blue:#3F6FE0;--cell:rgba(21,21,21,.04);
+  --noise:.10;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#151515;--fg:#EFEBE2;--mute:#8d897f;--line:rgba(239,235,226,.14);--grid:rgba(239,235,226,.035);
+  --paper:#EDE7DA;--paperInk:#151515;--cell:rgba(239,235,226,.025);--noise:.07}
+}
+:root[data-theme="dark"]{--bg:#151515;--fg:#EFEBE2;--mute:#8d897f;--line:rgba(239,235,226,.14);--grid:rgba(239,235,226,.035);
+  --paper:#EDE7DA;--paperInk:#151515;--cell:rgba(239,235,226,.025);--noise:.07}
+
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;color:var(--fg);font-family:'Courier Prime','Courier New',monospace;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px;}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:var(--noise);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--rust);outline-offset:3px}
+.app{max-width:440px;margin:0 auto;padding:0 18px 130px;position:relative;overflow-x:clip}
+
+/* type */
+.heavy{font-family:Montserrat,'Arial Black',sans-serif;font-weight:900;letter-spacing:-.06em;line-height:.85}
+.hand{font-family:Caveat,'Comic Sans MS',cursive;font-weight:700;letter-spacing:-.01em}
+.mono{font-family:'Courier Prime','Courier New',monospace;font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:11px}
+.outline{color:transparent;-webkit-text-stroke:1.5px var(--fg)}
+
+/* paper tag */
+.tag{display:inline-block;background:var(--paper);color:var(--paperInk);padding:5px 10px;box-shadow:3px 3px 0 var(--blue);transform:rotate(-2deg)}
+
+/* top */
+.top{display:flex;justify-content:space-between;align-items:flex-start;padding-top:16px;position:relative;z-index:3}
+.logo{font-family:Montserrat,sans-serif;font-weight:900;font-size:22px;line-height:.9;letter-spacing:-.06em}
+.theme{background:none;border:1px solid var(--line);padding:8px 10px;cursor:pointer;min-height:36px}
+[hidden]{display:none!important}
+.ticker{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:18px -18px 0;padding:12px 0;white-space:nowrap}
+.track{display:inline-flex;gap:26px;padding-left:26px;animation:ticker 40s linear infinite;font-family:Montserrat,'Arial Black',sans-serif;font-weight:900;letter-spacing:-.04em;font-size:22px;text-transform:uppercase;will-change:transform}
+.track span{flex:0 0 auto}
+.track em{font-family:Caveat,cursive;font-style:normal;font-weight:700;text-transform:none;color:var(--mute);margin-left:8px;letter-spacing:0}
+.track .star{color:var(--rust)}
+@keyframes ticker{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.track{animation:none}}
+
+.topbtns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.askwhy{color:var(--rust);letter-spacing:.1em;font-size:.72rem;margin:2px 0 8px}
+.row.others{width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);cursor:pointer;font:inherit;color:inherit}
+.row.others .nm{color:var(--mute)}
+.col .cnt{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:.6rem;color:var(--mute);letter-spacing:0}
+.col.hit .cnt{color:var(--rust)}
+.col.hit i{background:var(--rust);opacity:.85}
+.exams{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.exrow{display:flex;align-items:baseline;gap:10px;border-top:1px solid var(--line);padding-top:8px}
+.exrow .d{font-family:var(--mono);font-size:.72rem;color:var(--mute);white-space:nowrap}
+.exrow .n{flex:1;font-weight:700}
+.exrow button{background:none;border:0;font-family:var(--mono);font-size:.7rem;color:var(--rust);cursor:pointer}
+.target{display:flex;align-items:center;gap:9px;margin:14px 0;flex-wrap:wrap}
+.tbar{height:10px;background:var(--line);position:relative;overflow:hidden;margin-top:6px}
+.tbar i{display:block;height:100%;background:var(--rust)}
+.goalctl{display:flex;align-items:center;gap:9px;margin-top:14px;flex-wrap:wrap}
+.goalctl .lbl{font-size:.7rem;letter-spacing:.14em;color:var(--mute)}
+.goalctl .val{font-size:1rem}
+.goalctl .hint{font-size:.66rem;color:var(--mute)}
+.stepbtn{width:30px;height:30px;border:1px solid var(--line);background:none;font-size:1rem;line-height:1;cursor:pointer;color:inherit;border-radius:2px}
+.stepbtn:active{background:var(--rust);color:var(--paper)}
+/* study timer */
+.clockbig{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.06em;font-size:88px;line-height:.9;color:var(--rust);font-variant-numeric:tabular-nums}
+.timerhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips button{background:none;border:1px solid var(--line);color:var(--fg);padding:6px 10px;min-height:36px;font-size:12px;cursor:pointer}
+.lenctl{display:flex;margin-top:12px}
+.lenctl button{flex:1}
+.fytoday .qd{font-family:Caveat,cursive;font-weight:700;font-size:30px;line-height:1.05;margin:4px 0 6px}
+.fytoday .by{font-size:.7rem;letter-spacing:.1em;color:var(--mute)}
+.fytoday .cost{margin-top:16px;border-left:3px solid var(--rust);padding:2px 0 2px 12px;font-size:.95rem;line-height:1.4}
+.fytoday .row{display:flex;gap:8px;margin-top:12px}
+.fytoday .row .btn{margin-top:0;min-height:40px;font-size:.8rem}
+.goalcard{border:1px solid var(--line);background:var(--cell);box-shadow:6px 6px 0 var(--rust);padding:16px;margin-top:6px}
+.goalcard h3{font-family:Montserrat,Arial,sans-serif;font-weight:900;font-size:30px;letter-spacing:-.04em;line-height:.95;margin:4px 0 10px}
+.goalcard .bar{height:8px;background:var(--line);margin:10px 0 4px}
+.goalcard .bar i{display:block;height:100%;background:var(--rust)}
+.goalcard p{margin:8px 0 0;font-size:.95rem;line-height:1.4}
+.goalcard .btnrow{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.goalcard .btnrow .btn{margin-top:12px}
+.verdicts{display:flex;flex-direction:column;gap:8px}
+.verdict{border-top:1px solid var(--line);padding-top:8px;font-size:.95rem;line-height:1.35}
+.verdict b{color:var(--rust)}
+.notecard{border:2px solid var(--rust);padding:14px 16px;margin-top:10px;position:relative}
+.notecard .k{font-size:.68rem;letter-spacing:.1em;color:var(--rust)}
+.notecard .t{font-family:Caveat,cursive;font-weight:700;font-size:26px;line-height:1.05;margin-top:4px;padding-right:22px;overflow-wrap:anywhere}
+.notecard .x{position:absolute;top:6px;right:6px;background:none;border:0;color:var(--mute);font-size:20px;min-width:36px;min-height:36px;cursor:pointer}
+.compose{margin-top:10px}
+.compose.ask{border:1px solid var(--line);box-shadow:6px 6px 0 var(--rust);padding:14px;background:var(--cell)}
+.compose textarea{width:100%;min-height:84px;padding:12px;background:var(--bg);border:1px solid var(--line);color:var(--fg);font-family:Caveat,cursive;font-weight:700;font-size:24px;line-height:1.1;resize:vertical;box-sizing:border-box}
+.compose .segctl{display:flex;flex-wrap:wrap;margin-top:8px}
+.fields2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.field select{width:100%;padding:12px;background:var(--cell);border:1px solid var(--line);color:var(--fg);font-family:'Courier Prime',monospace;font-size:15px;min-height:46px}
+.check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:14px;line-height:1.35}
+.check input{width:20px;height:20px;margin:1px 0 0;accent-color:var(--rust)}
+.subj{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.subj .bar{grid-column:1/3;height:6px;background:var(--line)}
+.subj .bar i{display:block;height:100%;background:var(--rust)}
+/* week in review */
+.rvbig{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.rvbig .v{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:64px;line-height:.9}
+.rvbig .v small{font-size:.45em;color:var(--mute)}
+.delta{font-family:'Courier Prime',monospace;font-size:13px;padding:4px 8px;border:1px solid var(--line)}
+.delta.good{color:#3FB27F;border-color:#3FB27F}
+.delta.bad{color:var(--rust);border-color:var(--rust)}
+.rvtable{margin-top:16px;border-top:1px solid var(--line)}
+.rvrow{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rvrow .was{color:var(--mute);font-family:'Courier Prime',monospace;font-size:12px}
+.rvrow b{font-family:'Courier Prime',monospace}
+.rvrow .ch{grid-column:1/4;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.06em}
+.exp{margin-top:22px;border:1px solid var(--rust);padding:14px;box-shadow:4px 4px 0 var(--rust)}
+.exp .t{font-family:Montserrat,sans-serif;font-weight:900;font-size:22px;letter-spacing:-.03em;line-height:1.05;margin:6px 0}
+.exp .btnrow .btn{margin-top:10px}
+.facts{margin-top:14px;display:flex;flex-direction:column;gap:9px}
+.fact{display:flex;gap:10px;align-items:baseline;border-top:1px solid var(--line);padding-top:9px}
+.fact b{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;color:var(--rust);white-space:nowrap}
+.fact span{font-size:.92rem;line-height:1.35}
+.nights{display:flex;gap:6px;margin-top:16px;align-items:flex-end;height:74px}
+.night{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end;height:100%}
+.night i{display:block;width:100%;background:var(--ink);opacity:.82;border-radius:2px}
+.night i.short{background:var(--rust);opacity:1}
+.night i.none{background:repeating-linear-gradient(45deg,var(--line),var(--line) 2px,transparent 2px,transparent 4px)}
+.night u{font-family:var(--mono);font-size:.6rem;text-decoration:none;color:var(--mute)}
+.banner{margin-top:14px;border:1px solid var(--rust);color:var(--fg);background:var(--cell);padding:10px 12px;font-size:11px;letter-spacing:.08em;line-height:1.6}
+.empty{color:var(--mute);padding:18px 0;border-bottom:1px solid var(--line);margin:0}
+.row .ic img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.row .ic.has-img{padding:3px;overflow:hidden}
+.tokenbox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:20px}
+.tokencard{width:min(380px,100%);background:var(--bg);border:1px solid var(--line);box-shadow:6px 6px 0 var(--rust);padding:18px}
+.tokencard .hand{font-size:34px;margin:6px 0 4px;line-height:1}
+.tokencard input{width:100%;margin:12px 0;padding:12px;background:var(--cell);border:1px solid var(--line);color:var(--fg);font-family:'Courier Prime',monospace;font-size:14px}
+.tokencard button{width:100%;min-height:46px;background:var(--rust);color:#fff;border:0;cursor:pointer}
+
+/* hero */
+.hero{position:relative;height:620px;margin:0 -18px}
+.curve{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.curve path,.curve circle{fill:none;stroke:var(--fg);stroke-opacity:.35;stroke-width:1}
+.sticker{position:absolute;display:block;
+  filter:drop-shadow(2.5px 0 0 #EFE9DC) drop-shadow(-2.5px 0 0 #EFE9DC) drop-shadow(0 2.5px 0 #EFE9DC) drop-shadow(0 -2.5px 0 #EFE9DC) drop-shadow(1px 0 0 #C7503A) drop-shadow(-1px 0 0 #C7503A) drop-shadow(0 10px 14px rgba(0,0,0,.45))}
+.s-phone{left:4%;top:5%;width:25%;transform:rotate(-13deg)}
+.s-laptop{right:-8%;top:3%;width:56%;transform:rotate(9deg)}
+.s-shoe{left:-5%;bottom:14%;width:50%;transform:rotate(-9deg)}
+.s-clock{right:3%;bottom:10%;width:33%;transform:rotate(11deg)}
+.headline{position:absolute;left:0;right:0;top:35%;text-align:center;z-index:2}
+.headline h1{margin:0;color:var(--rust);font-size:clamp(58px,18vw,82px)}
+.headline .tag{position:absolute;left:58%;top:40%;font-size:10px;padding:4px 8px}
+.herofoot{position:absolute;left:18px;right:18px;bottom:0;display:flex;justify-content:space-between;color:var(--mute);z-index:2}
+
+/* day chips */
+.days{display:flex;gap:10px;overflow-x:auto;margin:22px -18px 0;padding:6px 18px 10px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;border:1px solid var(--line);background:var(--cell);padding:10px 12px;cursor:pointer;min-height:44px}
+.day[aria-pressed="true"]{background:var(--rust);color:#fff;border-color:var(--rust)}
+
+/* sections */
+section{margin-top:64px;scroll-margin-top:20px}
+.kicker{color:var(--mute);margin-bottom:10px}
+h2{margin:10px 0 6px;font-size:52px;line-height:.9}
+.lede{font-family:Caveat,cursive;font-size:22px;line-height:1.15;color:var(--mute);margin:6px 0 18px;max-width:30ch}
+
+/* cells */
+.cells{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
+.cell{padding:14px 12px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--cell);min-height:112px;display:flex;flex-direction:column;justify-content:space-between}
+.cell:nth-child(2n){border-right:0}
+.cell:nth-last-child(-n+2){border-bottom:0}
+.cell .k{color:var(--mute)}
+.cell .v{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:36px;line-height:.95}
+.cell .v small{font-size:.5em;letter-spacing:-.02em;color:var(--mute)}
+
+/* orbit */
+.orbitwrap{position:relative;margin:0 -18px}
+.orbit{display:block;width:100%;height:auto}
+.orbit .arc{fill:none;stroke:var(--fg);stroke-opacity:.18}
+.orbit .badge{cursor:pointer}
+.orbit .badge circle.b{fill:var(--bg);stroke-width:1.6}
+.orbit .badge.sel circle.b{stroke-width:3}
+.orbit .badge text{font-family:'Courier Prime',monospace;font-weight:700;text-anchor:middle;dominant-baseline:central}
+.pick{border:1px solid var(--line);background:var(--paper);color:var(--paperInk);padding:14px;margin-top:-6px;position:relative;z-index:2;box-shadow:4px 4px 0 var(--rust)}
+.pick .n{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:30px;line-height:1;text-transform:uppercase}
+.pick .d{margin-top:6px}
+
+/* app rows */
+.rows{border-top:1px solid var(--line)}
+.row{padding:16px 0 18px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center}
+.row .ic{grid-row:1/3;width:44px;height:44px;border-radius:50%;border:1.6px solid;display:grid;place-items:center;font-weight:700;font-size:14px}
+.row .nm{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.05em;font-size:24px;line-height:1;text-transform:uppercase}
+.row .meta{color:var(--mute);grid-column:2}
+.row .t{grid-row:1/3;grid-column:3;text-align:right;font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.04em;font-size:20px}
+.row .over{display:block;color:var(--rust);font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.1em;font-weight:700}
+.ticks{grid-column:1/-1;display:flex;gap:3px;margin-top:10px;height:16px;align-items:flex-end}
+.ticks i{flex:1;height:100%;background:var(--fg);opacity:.14}
+.ticks i.on{opacity:.9}
+.ticks i.hot{background:var(--rust);opacity:1}
+
+/* timeline */
+.lanes{border:1px solid var(--line);background:var(--cell)}
+.lanehead{display:flex;justify-content:space-between;padding:10px 12px 0;color:var(--mute)}
+.lane{position:relative;height:30px;margin:6px 12px 12px;background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px calc(100%/24))}
+.seg{position:absolute;top:3px;bottom:3px;background:var(--rust)}
+.seg.lap{background:var(--fg)}
+.seg.sleep{background:repeating-linear-gradient(45deg,var(--blue) 0 3px,transparent 3px 7px);border:1px solid var(--blue)}
+.hours{display:flex;justify-content:space-between;padding:0 12px 10px;color:var(--mute)}
+
+/* ascii */
+.ascii{margin:0;border:1px solid var(--line);background:var(--cell);padding:14px 10px;font-family:'Courier Prime',monospace;font-size:clamp(11px,3.3vw,14px);line-height:1.35;overflow-x:auto;white-space:pre}
+.ascii b{color:var(--rust);font-weight:700}
+.scale{display:flex;justify-content:space-between;color:var(--mute);margin-top:8px}
+
+/* steps */
+.week{position:relative;display:flex;gap:6px;height:180px;align-items:flex-end;border-bottom:1px solid var(--line);padding-top:18px}
+.col{flex:1;height:100%;background:none;border:0;padding:0;cursor:pointer;display:flex;flex-direction:column-reverse;gap:3px;position:relative}
+.col i{display:block;height:5px;background:var(--fg);opacity:.16}
+.col[aria-pressed="true"] i{background:var(--rust);opacity:1}
+.goal{position:absolute;left:0;right:0;border-top:1px dashed var(--mute);pointer-events:none}
+.goal span{position:absolute;right:0;top:-20px;color:var(--mute);background:var(--bg);padding-left:6px}
+.wk{display:flex;gap:6px;margin-top:8px}
+.wk span{flex:1;text-align:center;color:var(--mute)}
+.wk span.on{color:var(--rust)}
+
+/* sleep */
+.sleepbig{font-size:clamp(76px,24vw,108px);margin:6px 0 0}
+.sleeprow{display:flex;align-items:center;gap:14px;margin-top:14px}
+.sleeprow svg{width:84px;flex:0 0 auto;transform:rotate(-8deg)}
+.note{font-size:13px;color:var(--mute);margin:0}
+
+/* split */
+.split{display:flex;height:64px;border:1px solid var(--line)}
+.split div{display:flex;flex-direction:column;justify-content:center;padding:0 12px;overflow:hidden;white-space:nowrap}
+.split .ph{background:var(--rust);color:#fff}
+.split .lp{background:var(--cell)}
+
+/* outro */
+.outro{margin-top:80px}
+.outro h2{font-size:clamp(70px,22vw,100px);margin:0}
+.foot{margin-top:18px;color:var(--mute)}
+
+/* screens */
+#screens{position:relative}
+.screen{display:none}
+.screen.on{display:block;animation:screenin .22s ease-out}
+@keyframes screenin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.screen > section:first-child{margin-top:24px}
+.daybar{position:sticky;top:0;z-index:30;background:var(--bg);margin:0 -18px;padding:2px 18px 4px;display:none}
+.daybar.on{display:block}
+.daybar .days{margin-top:10px}
+@media (prefers-reduced-motion:reduce){.screen.on{animation:none}}
+
+/* bottom nav */
+.nav{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(404px,calc(100% - 24px));z-index:40;
+  background:var(--paper);color:var(--paperInk);box-shadow:4px 4px 0 var(--rust);padding:8px 8px 6px}
+.nav .links{display:flex}
+.nav a,.nav button{flex:1;text-align:center;color:inherit;text-decoration:none;padding:8px 2px;min-height:44px;
+  background:none;border:0;font:inherit;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;opacity:.55}
+.nav a.on,.nav button[aria-current="page"]{opacity:1;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
+.prog{display:flex;gap:2px;height:10px;align-items:flex-end;padding:0 4px}
+.prog i{flex:1;height:100%;background:currentColor;opacity:.2}
+.prog i.on{background:var(--rust);opacity:1}
+.prog i:nth-child(3n){height:60%}
+.prog i:nth-child(5n){height:80%}
+
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+
+@font-face{font-family:Montserrat;src:url(fonts/montserrat-800-900.woff2) format('woff2');font-weight:800 900;font-display:swap}
+@font-face{font-family:Caveat;src:url(fonts/caveat-600-700.woff2) format('woff2');font-weight:600 700;font-display:swap}
+@font-face{font-family:'Courier Prime';src:url(fonts/courierprime-400.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Courier Prime';src:url(fonts/courierprime-700.woff2) format('woff2');font-weight:700;font-display:swap}
+
+.cell .v.small{font-size:22px;line-height:1.05;letter-spacing:-.03em;text-transform:uppercase;word-break:break-word}
+
+/* categories */
+.catbar{display:flex;height:14px;border:1px solid var(--line);margin:4px 0 8px;overflow:hidden}
+.catbar i{display:block;height:100%}
+.catlegend{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--mute);font-size:10px;margin-bottom:14px}
+.catlegend b{display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:-1px}
+
+/* why */
+.zombie{display:flex;gap:16px;align-items:center;border:1px solid var(--line);background:var(--cell);padding:14px}
+.zombie .zn{font-size:64px;color:var(--rust);min-width:74px;text-align:center}
+.block{margin-top:26px}
+.li{display:grid;grid-template-columns:36px 1fr auto;gap:2px 12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.li .ic{width:36px;height:36px;border-radius:50%;border:1.5px solid;display:grid;place-items:center;font-weight:700;font-size:12px;overflow:hidden}
+.li .ic img{width:100%;height:100%;object-fit:cover;display:block}
+.li .nm{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.04em;font-size:18px;text-transform:uppercase;line-height:1}
+.li .sub{grid-column:2;color:var(--mute);font-size:11px;letter-spacing:.06em}
+.li .val{grid-row:1/3;grid-column:3;font-family:Montserrat,sans-serif;font-weight:900;font-size:18px;letter-spacing:-.03em;text-align:right}
+.li .bar{grid-column:2/4;height:3px;background:var(--soft,rgba(128,128,128,.2));margin-top:6px}
+.li .bar i{display:block;height:100%;background:var(--rust)}
+
+/* patterns */
+.pat{border:1px solid var(--line);background:var(--cell);padding:16px 14px;margin-bottom:12px;position:relative}
+.pat p{font-family:Caveat,cursive;font-size:26px;line-height:1.1;margin:0 0 10px}
+.pat .meta{color:var(--mute);font-size:10px;letter-spacing:.1em}
+.pat .badge{position:absolute;top:-10px;right:10px;background:var(--rust);color:#fff;padding:2px 8px;font-size:10px;letter-spacing:.1em}
+.empty-state{border:1px dashed var(--line);padding:18px 14px;color:var(--mute)}
+.meter{height:8px;background:var(--line);margin-top:10px}
+.meter i{display:block;height:100%;background:var(--rust)}
+
+/* buttons */
+.btn{display:block;width:100%;min-height:50px;margin-top:12px;background:var(--rust);color:#fff;border:0;cursor:pointer;
+  font-family:'Courier Prime',monospace;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12px;box-shadow:4px 4px 0 var(--fg)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--fg)}
+.btn.ghost{background:var(--cell);color:var(--fg);border:1px solid var(--line)}
+.linkbtn{background:none;border:0;color:var(--rust);cursor:pointer;font-size:10px;letter-spacing:.1em;padding:0;min-height:24px}
+.btn.danger{background:none;color:var(--rust);border:1px solid var(--rust);box-shadow:none}
+.btn[disabled]{opacity:.45;cursor:default}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* exam */
+.field{display:block;margin-top:12px}
+.field span{display:block;color:var(--mute);margin-bottom:6px}
+.field input{width:100%;padding:12px;background:var(--cell);border:1px solid var(--line);color:var(--fg);font-family:'Courier Prime',monospace;font-size:15px;min-height:46px}
+.count{display:flex;align-items:baseline;gap:10px;margin:8px 0 4px}
+.count .heavy{font-size:84px;color:var(--rust)}
+.ratio{display:flex;height:40px;border:1px solid var(--line);margin-top:10px}
+.ratio div{display:flex;align-items:center;padding:0 10px;overflow:hidden;white-space:nowrap;font-size:11px}
+.ratio .st{background:var(--fg);color:var(--bg)}
+.ratio .ds{background:var(--rust);color:#fff}
+.ratio .none{flex:1;color:var(--mute)}
+.exweek{display:flex;gap:6px;height:120px;align-items:flex-end;margin-top:16px;border-bottom:1px solid var(--line)}
+.exweek .d{flex:1;display:flex;gap:2px;align-items:flex-end;height:100%}
+.exweek .d i{flex:1;display:block;min-height:2px}
+.exweek .d .s{background:var(--fg)} .exweek .d .x{background:var(--rust)}
+.segctl{display:inline-flex;border:1px solid var(--line)}
+.segctl button{background:none;border:0;padding:8px 8px;font-size:10px;letter-spacing:.08em;cursor:pointer;color:var(--mute);min-height:36px}
+.segctl button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.labels .li{grid-template-columns:36px 1fr}
+.labels .segctl{grid-column:1/3;margin-top:6px;justify-self:start}
+details.edit{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+details.edit summary{cursor:pointer;color:var(--fg);min-height:40px;display:flex;align-items:center}
+
+/* worth it */
+.askcard{border:1px solid var(--line);background:var(--cell);padding:16px 14px}
+.askcard .when{color:var(--mute);font-size:11px;letter-spacing:.1em}
+.askcard .what{display:flex;align-items:center;gap:12px;margin:10px 0 14px}
+.askcard .what .ic{width:44px;height:44px;border-radius:50%;border:1.6px solid;display:grid;place-items:center;font-weight:700;overflow:hidden;flex:0 0 auto}
+.askcard .what .ic img{width:100%;height:100%;object-fit:cover;display:block}
+.askcard .nm{font-family:Montserrat,sans-serif;font-weight:900;letter-spacing:-.04em;font-size:26px;line-height:1;text-transform:uppercase}
+.askcard .dur{color:var(--mute);font-size:12px;margin-top:4px;letter-spacing:.06em}
+.askrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.askrow .btn{margin-top:0}
+.btn.yes{background:var(--cell);color:var(--fg);border:1px solid var(--fg);box-shadow:none}
+.asknote{display:flex;justify-content:space-between;color:var(--mute);font-size:10px;letter-spacing:.1em;margin-top:10px}
+.regret{border:1px solid var(--rust);background:var(--cell);padding:16px 14px;margin-top:20px}
+.regret .big{font-family:Montserrat,sans-serif;font-weight:900;font-size:52px;line-height:1;color:var(--rust);letter-spacing:-.04em}
+.window{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.window .time{font-family:Montserrat,sans-serif;font-weight:900;font-size:26px;letter-spacing:-.03em;grid-row:1/3}
+.window .sub{color:var(--mute);font-size:11px;letter-spacing:.06em}
+.pred{border:1px dashed var(--line);padding:12px;margin-top:14px;color:var(--mute);font-size:12px;line-height:1.6}
+
+/* receipt */
+.receipt{display:block;width:100%;height:auto;border:1px solid var(--line);margin-top:6px;background:#151515}
+
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top" id="today">
+    <div class="logo">foot<br>print</div>
+    <div class="topbtns">
+      <button class="theme mono" id="syncBtn" type="button" hidden>Refresh</button>
+      <button class="theme mono" id="settingsBtn" type="button" hidden>Settings</button>
+      <button class="theme mono" id="theme" type="button">Theme</button>
+    </div>
+  </header>
+
+  <div class="daybar" id="daybar">
+  <nav class="days" id="days" aria-label="Choose a day"></nav>
+  <div class="banner mono" id="banner" role="status" hidden></div>
+  </div>
+
+  <div id="screens">
+    <div class="screen" id="s-today" data-screen="today" data-daybar="1">
+  <!-- HERO -->
+  <div class="hero" aria-label="Footprint">
+    <svg class="curve" viewBox="0 0 400 620" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M-10 540 C 80 560, 150 470, 190 360 S 320 170, 420 250"/>
+      <circle cx="235" cy="330" r="118"/>
+      <path d="M300 120 L 250 270"/>
+    </svg>
+
+    <!-- phone -->
+    <svg class="sticker s-phone" viewBox="0 0 110 200" aria-hidden="true">
+      <rect x="4" y="4" width="102" height="192" rx="18" fill="#222325" stroke="#111" stroke-width="3"/>
+      <rect x="12" y="16" width="86" height="168" rx="11" fill="#EFE8D8"/>
+      <rect x="43" y="9" width="24" height="4" rx="2" fill="#555"/>
+      <text x="55" y="52" text-anchor="middle" font-family="Montserrat,Arial" font-weight="900" font-size="24" fill="#151515" letter-spacing="-1.5" id="stickerTime">0:00</text>
+      <text x="55" y="64" text-anchor="middle" font-family="Courier Prime,monospace" font-size="7" fill="#6d685f">SCREEN TODAY</text>
+      <g>
+        <rect x="20" y="80" width="18" height="18" rx="5" fill="#C7503A"/><rect x="46" y="80" width="18" height="18" rx="5" fill="#3F6FE0"/><rect x="72" y="80" width="18" height="18" rx="5" fill="#E3B23C"/>
+        <rect x="20" y="106" width="18" height="18" rx="5" fill="#3FB27F"/><rect x="46" y="106" width="18" height="18" rx="5" fill="#151515"/><rect x="72" y="106" width="18" height="18" rx="5" fill="#D46FA8"/>
+        <rect x="20" y="132" width="18" height="18" rx="5" fill="#8C6CE0"/><rect x="46" y="132" width="18" height="18" rx="5" fill="#E88A3A"/><rect x="72" y="132" width="18" height="18" rx="5" fill="#3FB6C9"/>
+      </g>
+      <rect x="38" y="172" width="34" height="3" rx="1.5" fill="#151515"/>
+    </svg>
+
+    <!-- laptop -->
+    <svg class="sticker s-laptop" viewBox="0 0 220 150" aria-hidden="true">
+      <defs><pattern id="keys" width="9" height="8" patternUnits="userSpaceOnUse"><rect x="1" y="1" width="7" height="6" rx="1.2" fill="#F4EEE0" stroke="#9c9383" stroke-width=".6"/></pattern></defs>
+      <rect x="22" y="8" width="176" height="104" rx="8" fill="#E7DECB" stroke="#222" stroke-width="3"/>
+      <rect x="33" y="19" width="154" height="80" rx="3" fill="#1A1C1B"/>
+      <text x="40" y="34" font-family="Courier Prime,monospace" font-size="8" fill="#3FB27F">$ footprint sync</text>
+      <rect x="40" y="42" width="60" height="4" fill="#C7503A"/><rect x="104" y="42" width="30" height="4" fill="#555"/>
+      <rect x="40" y="52" width="92" height="4" fill="#E3B23C"/>
+      <rect x="40" y="62" width="44" height="4" fill="#3F6FE0"/><rect x="88" y="62" width="50" height="4" fill="#555"/>
+      <rect x="40" y="72" width="76" height="4" fill="#EFE8D8"/>
+      <rect x="40" y="84" width="6" height="8" fill="#3FB27F"/>
+      <path d="M6 116 H214 L204 140 H16 Z" fill="#DCD1BA" stroke="#222" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="30" y="119" width="160" height="10" fill="url(#keys)"/>
+      <rect x="92" y="131" width="36" height="6" rx="2" fill="#CFC3A9" stroke="#9c9383" stroke-width=".8"/>
+      <rect x="170" y="119" width="14" height="10" rx="1.5" fill="#C7503A"/>
+    </svg>
+
+    <!-- sneaker -->
+    <svg class="sticker s-shoe" viewBox="0 0 200 110" aria-hidden="true">
+      <path d="M16 76 Q12 48 38 42 L76 32 Q92 28 101 40 L120 58 Q152 60 176 64 Q194 68 191 78 Z" fill="#C7503A" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M58 74 L96 42 L110 52 L78 76 Z" fill="#3F6FE0" stroke="#1d1d1d" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M24 48 Q40 38 64 40" fill="none" stroke="#1d1d1d" stroke-width="3" stroke-linecap="round"/>
+      <g stroke="#EFE8D8" stroke-width="3" stroke-linecap="round"><path d="M100 44 L112 40"/><path d="M106 50 L119 46"/><path d="M112 56 L125 53"/></g>
+      <path d="M8 80 Q8 96 28 98 L180 98 Q196 97 195 83 L191 75 L12 75 Z" fill="#F2ECDF" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M14 88 H190" stroke="#1d1d1d" stroke-width="1.5" stroke-dasharray="5 4"/>
+    </svg>
+
+    <!-- alarm clock -->
+    <svg class="sticker s-clock" viewBox="0 0 160 170" aria-hidden="true">
+      <path d="M22 44 A26 26 0 0 1 60 14 Z" fill="#C7503A" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M138 44 A26 26 0 0 0 100 14 Z" fill="#C7503A" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M50 150 L38 164 M110 150 L122 164" stroke="#1d1d1d" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="80" cy="96" r="60" fill="#E7DECB" stroke="#1d1d1d" stroke-width="4"/>
+      <circle cx="80" cy="96" r="47" fill="#F6F1E6" stroke="#1d1d1d" stroke-width="1.5"/>
+      <g stroke="#1d1d1d" stroke-width="3" stroke-linecap="round"><path d="M80 54 V62"/><path d="M80 130 V138"/><path d="M38 96 H46"/><path d="M114 96 H122"/></g>
+      <path d="M80 96 L80 68" stroke="#1d1d1d" stroke-width="4" stroke-linecap="round"/>
+      <path d="M80 96 L100 108" stroke="#C7503A" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="80" cy="96" r="4" fill="#1d1d1d"/>
+      <text x="112" y="28" font-family="Caveat,cursive" font-weight="700" font-size="22" fill="#3F6FE0">z z</text>
+    </svg>
+
+    <div class="headline">
+      <h1 class="heavy">Screens<br>Steps &amp;<br>Sleep.</h1>
+      <span class="tag mono">Private log</span>
+    </div>
+
+    <div class="herofoot mono"><span id="heroDate"></span><span>Scroll ↓</span></div>
+  </div>
+
+  <div class="ticker" aria-hidden="true"><div class="track" id="track"></div></div>
+  <!-- NUMBERS -->
+  <section>
+    <div class="kicker mono">The day in numbers</div>
+    <div class="cells">
+      <div class="cell"><span class="k mono">01 / Screen</span><span class="v" id="cScreen"></span></div>
+      <div class="cell"><span class="k mono">02 / Steps</span><span class="v" id="cSteps"></span></div>
+      <div class="cell"><span class="k mono">03 / Sleep</span><span class="v" id="cSleep"></span></div>
+      <div class="cell"><span class="k mono">04 / Unlocks</span><span class="v" id="cUnlocks"></span></div>
+    </div>
+  </section>
+  <!-- FUTURE YOU: quote of the day, today's time in your goal, your own verdict -->
+  <section id="fyToday" class="fytoday"></section>
+  <!-- ORBIT -->
+  <section id="apps">
+    <span class="tag mono">01 / App map</span>
+    <h2 class="hand">Apps in Orbit</h2>
+    <p class="lede">The inner ring took most of your day. Tap an app to see how long.</p>
+    <div class="orbitwrap">
+      <svg class="orbit" id="orbit" viewBox="-20 0 400 262" role="group" aria-label="Apps arranged by time spent"></svg>
+    </div>
+    <div class="pick" id="pick" aria-live="polite"></div>
+  </section>
+  <!-- LIST -->
+  <section>
+    <div class="kicker mono">Every app, ranked</div>
+    <h2 class="heavy">Where it<br><span class="outline">went.</span></h2>
+    <p class="lede">Social and video apps go red once they pass an hour.</p>
+    <div class="catbar" id="cats" aria-label="Screen time by category"></div>
+    <div class="catlegend mono" id="catlegend"></div>
+    <div class="rows" id="rows"></div>
+  </section>
+    </div>
+    <div class="screen" id="s-worth" data-screen="worth" data-daybar="1">
+  <!-- WORTH IT -->
+  <section id="worth">
+    <span class="tag mono">01 / Worth it?</span>
+    <h2 class="hand">Was That Worth It?</h2>
+    <p class="lede">Answer a few, and the app learns which moments you regret, then warns you before the next one.</p>
+    <div id="ask"></div>
+    <div id="regretBox"></div>
+  </section>
+  <!-- NOTIFICATION TRIAGE -->
+  <section id="notif">
+    <div class="kicker mono">Notifications, last 7 days</div>
+    <h2 class="heavy">What keeps<br><span class="outline">buzzing.</span></h2>
+    <p class="lede">How much time each app's notifications actually cost you. Turn off the worst offenders in two taps.</p>
+    <div id="triageList"></div>
+  </section>
+    </div>
+    <div class="screen" id="s-why" data-screen="why" data-daybar="1">
+  <!-- WHY -->
+  <section id="why">
+    <span class="tag mono">01 / Why</span>
+    <h2 class="hand">Why You Picked It Up</h2>
+    <p class="lede">Not how long. What pulled you in.</p>
+
+    <div class="zombie">
+      <div class="zn heavy" id="zombieN">0</div>
+      <div>
+        <div class="mono k">Zombie unlocks</div>
+        <p class="note" id="zombieTxt"></p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="kicker mono">First app after unlocking</div>
+      <div id="firstList"></div>
+    </div>
+    <div class="block">
+      <div class="kicker mono">Notifications that pulled you in</div>
+      <div id="pullList"></div>
+    </div>
+    <div class="block">
+      <div class="kicker mono">Doom-scrolls (20+ min, one app)</div>
+      <div id="doomList"></div>
+    </div>
+    <div class="block">
+      <div class="kicker mono">What you said before opening, last 7 days</div>
+      <div id="intentList"></div>
+    </div>
+    <div class="block">
+      <div class="kicker mono">Rule screens, last 7 days</div>
+      <div id="ruleList"></div>
+    </div>
+  </section>
+  <!-- 24H -->
+  <section id="day">
+    <span class="tag mono">02 / Timeline</span>
+    <h2 class="hand">Your 24 Hours</h2>
+    <p class="lede">Sleep and every phone session, laid across the day.</p>
+    <div class="lanes">
+      <div class="lanehead mono"><span>Sleep, estimated</span><span id="lSleep"></span></div>
+      <div class="lane" id="laneSleep"></div>
+      <div class="lanehead mono"><span>Phone</span><span id="lPhone"></span></div>
+      <div class="lane" id="lanePhone"></div>
+      <div class="hours mono"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>
+    </div>
+  </section>
+  <!-- NIGHT & MORNING -->
+  <section>
+    <div class="kicker mono">Night and morning</div>
+    <h2 class="heavy">Phone<br><span class="outline">in bed.</span></h2>
+    <div class="cells" style="margin-top:18px">
+      <div class="cell"><span class="k mono">Hour before sleep</span><span class="v" id="nInBed"></span></div>
+      <div class="cell"><span class="k mono">After 10 pm</span><span class="v" id="nLate"></span></div>
+      <div class="cell"><span class="k mono">Morning reach</span><span class="v" id="nReach"></span></div>
+      <div class="cell"><span class="k mono">First app of the day</span><span class="v small" id="nFirst"></span></div>
+    </div>
+    <p class="note" id="nightNote" style="margin-top:12px"></p>
+  </section>
+  <!-- ASCII WEEK -->
+  <section>
+    <div class="kicker mono">Screen time by hour</div>
+    <h2 class="heavy">The week<br><span class="outline">in ASCII.</span></h2>
+    <p class="lede">Denser characters mean more screen time in that hour.</p>
+    <pre class="ascii" id="ascii"></pre>
+    <div class="scale mono"><span>idle  . : - = + * # %  @ full hour</span></div>
+  </section>
+    </div>
+    <div class="screen" id="s-trends" data-screen="trends">
+  <!-- PATTERNS -->
+  <section id="patterns">
+    <span class="tag mono">01 / Patterns</span>
+    <h2 class="heavy">Your<br><span class="outline">patterns.</span></h2>
+    <p class="lede">Worked out on this phone from the last 30 days. Screen, steps and sleep, together.</p>
+    <div id="patternList"></div>
+  </section>
+  <!-- STEPS + SLEEP -->
+  <section id="body">
+    <span class="tag mono">02 / Movement</span>
+    <h2 class="hand">Steps This Week</h2>
+    <p class="lede">Counted by your phone's step sensor, so only while it's on you. Tap a day to open it.</p>
+    <div class="week" id="week"></div>
+    <div class="wk mono" id="wk"></div>
+    <div class="goalctl" id="goalCtl"></div>
+    <div id="stepsFacts" class="facts"></div>
+  </section>
+  <section>
+    <div class="kicker mono">Last night</div>
+    <p class="sleepbig heavy outline" id="sleepBig"></p>
+    <div class="sleeprow">
+      <svg viewBox="0 0 100 100" aria-hidden="true" class="sticker" style="position:static">
+        <path d="M66 12 A40 40 0 1 0 88 70 A32 32 0 1 1 66 12 Z" fill="#E3B23C" stroke="#1d1d1d" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="40" cy="58" r="4" fill="#C9962C"/><circle cx="54" cy="76" r="3" fill="#C9962C"/>
+      </svg>
+      <p class="note" id="sleepNote"></p>
+    </div>
+    <div class="nights" id="sleepWeek"></div>
+    <div id="sleepFacts" class="facts"></div>
+  </section>
+    </div>
+    <div class="screen" id="s-exam" data-screen="exam">
+  <section id="timer-section">
+    <span class="tag mono">01 / Study timer</span>
+    <h2 class="hand">Study Session</h2>
+    <p class="lede">Time a session, from a book or an app. Your distracting apps stay locked until it ends.</p>
+    <div id="timer"></div>
+  </section>
+  <section id="exam-section">
+    <span class="tag mono">02 / Exam mode</span>
+    <h2 class="hand">Exam Mode</h2>
+    <p class="lede">Count down to what is coming, set a daily study target, and watch study time against scrolling. Timed sessions count as study.</p>
+    <div id="exam"></div>
+  </section>
+  <section id="future-section">
+    <span class="tag mono">03 / Future you</span>
+    <h2 class="heavy">Future<br><span class="outline">you.</span></h2>
+    <p class="lede">Your own words, your own pace, your own goal. Shown on the screens that appear over your apps.</p>
+    <div id="future"></div>
+  </section>
+    </div>
+    <div class="screen" id="s-you" data-screen="you">
+  <!-- WEEK IN REVIEW -->
+  <section id="review">
+    <span class="tag mono">01 / Week in review</span>
+    <h2 class="hand">Your Week</h2>
+    <p class="lede">The last 7 days against the 7 before. Then one small thing to try.</p>
+    <div id="reviewBox"></div>
+    <canvas class="receipt" id="reviewCard" width="1080" height="1350" aria-label="Week in review card" hidden></canvas>
+    <button class="btn ghost" id="shareReview" type="button">Share this review</button>
+  </section>
+  <!-- RECEIPT -->
+  <section>
+    <span class="tag mono">02 / Receipt</span>
+    <h2 class="heavy">Your week,<br><span class="outline">printed.</span></h2>
+    <p class="lede">A shareable image of the last 7 days. Only this picture is shared, nothing else.</p>
+    <canvas class="receipt" id="receipt" width="1080" height="1350" aria-label="Weekly receipt preview"></canvas>
+    <button class="btn" id="shareBtn" type="button">Share my week</button>
+  </section>
+  <!-- DATA -->
+  <section>
+    <span class="tag mono">03 / Your data</span>
+    <h2 class="heavy">Stays<br><span class="outline">here.</span></h2>
+    <p class="note" style="margin:10px 0 16px">This app has no internet permission, so it can't send anything anywhere. Everything is stored on this phone, and the last 90 days are kept.</p>
+    <div class="btnrow">
+      <button class="btn ghost" id="exportJson" type="button">Export JSON</button>
+      <button class="btn ghost" id="exportCsv" type="button">Export CSV</button>
+    </div>
+    <button class="btn danger" id="wipeBtn" type="button">Delete everything</button>
+  </section>
+  <!-- OUTRO -->
+  <section class="outro">
+    <h2 class="heavy">Log<br><span class="outline">off.</span></h2>
+    <div class="cells" style="margin-top:22px">
+      <div class="cell" style="min-height:84px"><span class="k mono">Source</span><span class="mono" id="cellSources">This phone only</span></div>
+      <div class="cell" style="min-height:84px"><span class="k mono">Collected</span><span class="mono" id="cellSync">Every 15 min</span></div>
+    </div>
+    <p class="foot mono" id="foot">Loading…</p>
+  </section>
+    </div>
+  </div>
+</div>
+
+<nav class="nav mono" aria-label="Sections">
+  <div class="links">
+    <button type="button" data-s="today" aria-current="page">Today</button>
+    <button type="button" data-s="worth">Worth</button>
+    <button type="button" data-s="why">Why</button>
+    <button type="button" data-s="trends">Trends</button>
+    <button type="button" data-s="exam">Exam</button>
+    <button type="button" data-s="you">You</button>
+  </div>
+  <div class="prog" id="prog" aria-hidden="true"></div>
+</nav>
+
+<script src="quotes.js"></script>
+<script src="analytics.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

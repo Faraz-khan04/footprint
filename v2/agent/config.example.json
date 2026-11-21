@@ -1,0 +1,11 @@
+{
+  "api_url": "http://100.x.y.z:8000",
+  "device_id": "laptop-main",
+  "device_secret": "PASTE_THE_SECRET_FROM_REGISTRATION",
+  "poll_seconds": 5,
+  "idle_seconds": 180,
+  "sync_seconds": 60,
+  "send_titles": true,
+  "redact": ["keepass", "bitwarden", "1password", "incognito", "inprivate", "private browsing", "bank"],
+  "ignore": ["lockapp", "screensaver"]
+}

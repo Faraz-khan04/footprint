@@ -1,0 +1,50 @@
+WORTH IT?
+Now and then the app shows you one session you just had and asks a single question: was that worth it? Two taps. After about eight answers it starts spotting the pattern, for example "YouTube after 10 pm: you marked 9 of 11 not worth it." Then it tells you what your day really cost: "4h 39m on screen, of which 35 minutes you'd take back." It also finds the clock times your regretted sessions start, and sends a plain notification a few minutes before, so the warning arrives before the scroll instead of after it.
+
+It runs entirely on your phone. The app has no internet permission at all, so your data cannot leave your device, and there are no accounts, no ads and no analytics.
+
+WHAT ELSE YOU SEE
+• Screen time by app and category, with your real app icons
+• Zombie unlocks: the times you unlocked, opened nothing, and locked again
+• Which notifications actually pull you back in
+• Doom-scrolls: unbroken stretches of over 20 minutes in one app
+• Sleep, estimated from your last phone use at night and first unlock in the morning
+• Phone in bed: screen time in the hour before sleep
+• Steps from your phone's step sensor
+
+SETTINGS THAT ACTUALLY DO SOMETHING
+Quiet hours, a steps goal and a screen-time target. Hide any app so it is never recorded. Export as JSON or CSV, or delete everything, at any time.
+
+Everything is free. No subscription, no ads, no paid tier, no account.
+
+PATTERNS, WORKED OUT ON YOUR PHONE
+After about a week, Footprint connects screen time, steps and sleep: "on days you walked 6,000+ steps you spent 48 minutes less on social apps." Each shows how many days it is based on.
+
+APP RULES, ONLY IF YOU WANT THEM
+Set a daily limit, a number of opens, or a break after so many minutes in one go. Ask yourself "why am I opening this?" before an app starts: bored, habit, or a real reason. Your answers show up in the Why tab. Block your distracting apps during study hours or at night. Each screen suggests something to do instead. You can always take 5 more minutes, or cap that yourself, and looser changes can be set to wait until tomorrow.
+
+STUDY TIMER AND EXAM MODE
+Time a 25, 50 or 90 minute session, or run a stopwatch, and your distracting apps stay locked until it ends. Timed sessions count as study even when you're working from a book. Set exam dates for a countdown, a daily study target and a streak.
+
+FUTURE YOU
+Motivation from your own life. Open an app you keep regretting and see your own verdict: "The last 9 times you used Instagram late at night, you said it wasn't worth it 8 times." Set a goal and see your time in it: "That's about 1.5 chapters of DBMS, at your pace." Leave a note after studying for the you who'll want to scroll later.
+
+CLOSE REELS AND SHORTS (USES THE ACCESSIBILITY SERVICE)
+Optional: Footprint can close YouTube Shorts, Instagram Reels and Snapchat Spotlight as soon as they open. This uses Android's AccessibilityService API. It only runs in those three apps, only checks which screen and tab is showing (never messages or anything you type), and only presses Back. Nothing is stored or sent. It stays off until you agree to an in-app explanation and turn it on, and you can turn it off any time.
+
+YOUR WEEK, AS A RECEIPT
+A shareable receipt of your week: screen time, top apps, unlocks, sleep. Only the picture is shared.
+
+HOME SCREEN WIDGET
+Answer "worth it?" and see today from your home screen.
+
+PERMISSIONS
+• Usage access: to see which apps you use, your unlocks, screen on/off and notification events. This is the app.
+• Physical activity: to read the step counter. Optional.
+• Notifications: to send you the nudge before a risky moment. Optional.
+• Display over other apps: to show the rule screens and the study lock. Optional, only for app rules.
+• Accessibility service: to close Reels, Shorts and Spotlight if you turn that feature on. Optional, off by default.
+
+Footprint never reads message or notification text.
+
+Footprint is not a medical device. Steps and sleep are estimates.

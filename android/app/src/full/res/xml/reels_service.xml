@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Events only from these apps. Footprint is not an accessibility tool, so isAccessibilityTool is false. -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged|typeViewScrolled"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagReportViewIds"
+    android:canRetrieveWindowContent="true"
+    android:isAccessibilityTool="false"
+    android:notificationTimeout="150"
+    android:packageNames="com.google.android.youtube,com.instagram.android,com.instagram.lite,com.snapchat.android"
+    android:description="@string/reels_service_description" />
