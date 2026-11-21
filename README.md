@@ -2,6 +2,15 @@
 
 An Android app that learns **which** screen time you regret and warns you before the next one, instead of just counting hours. Free, no ads, no accounts. Everything runs on the phone: the app has **no internet permission**, so nothing can leave the device.
 
+<p align="center">
+  <img src="docs/screenshots/worth.png" width="24%" alt="Was it worth it">
+  <img src="docs/screenshots/why.png" width="24%" alt="Why you picked it up">
+  <img src="docs/screenshots/future.png" width="24%" alt="Future you">
+  <img src="docs/screenshots/patterns.png" width="24%" alt="Patterns">
+</p>
+
+<sub>Screens use the dashboard's built-in sample data, not real usage.</sub>
+
 ```
 android/   the app (Kotlin): collectors, local database, widget, WebView host
 web/       the dashboard (HTML/JS/fonts) bundled into the app, plus the analytics engine and its tests
